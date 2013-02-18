@@ -1,0 +1,402 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  
+  <head>
+    <title>Trialist User Setup</title>
+    
+    <!-- Auto-generated stuff -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link href="https://fonts.googleapis.com/css?family=Limelight|Flamenco|Federo|Yesteryear|Josefin Sans|Spinnaker|Sansita One|Handlee|Droid Sans|Oswald:400,300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="../bootstrap/css/bootstrap.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="../bootstrap/css/bootstrap-responsive.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="UserSetup.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    
+    <!-- jQuery stuff -->
+    <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+  </head>
+  
+  <body onload="load()">
+    <div class="container">
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <span class="span12">
+            <div class="page-header">
+              <h1>Trialist User Setup</h1>
+            </div>
+          </span>
+        </div>
+      </div>
+      <br />
+      <br />
+      <div>
+        <form class="form-horizontal" action="#">
+          <h3 class="heading heading-shaddow">User</h3>
+        </form>
+        <div class="well">
+          <form class="form-horizontal" action="#">
+            <div class="control-group">
+              <label class="control-label">Username:</label>
+              <div class="controls">
+                <select id="selectUser">
+                  <option value="New User" selected="selected">New User</option>
+                </select>
+                <input id="inputNewUserUsername" class="textinput" type="text" placeholder="New Username">
+              </div>
+            </div>
+            <label id="lblNewUserPassword" class="control-label">Password:</label>
+            <div id="divNewUserPassword" class="control-group">
+              <div class="controls">
+                <input class="textinput" type="text" placeholder="New User Password">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div>
+        <form class="form-horizontal" action="#">
+          <h3 class="heading heading-shaddow">Campaign Information
+            <br>
+          </h3>
+        </form>
+        <div class="well">
+          <form class="form-horizontal" action="#">
+            <div class="control-group">
+              <label class="control-label">Name:</label>
+              <div class="controls">
+                <input class="textinput" type="text" placeholder="Campaign Name">
+              </div>
+            </div>
+            <label class="control-label">Description:</label>
+            <div class="control-group">
+              <div class="controls">
+                <input class="textinput" type="text" placeholder="Campaign Description">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div>
+        <form class="form-horizontal" action="#">
+          <h3 class="heading heading-shaddow">Trial Information
+            <br>
+          </h3>
+        </form>
+        <div class="well">
+          <form class="form-horizontal" action="#">
+            <h4 class="heading heading-shaddow">First Regimen
+              <br>
+            </h4>
+          </form>
+          <div class="well">
+            <form class="form-horizontal" action="#">
+              <div class="control-group">
+                <label class="control-label" style="width:140px;">Regimen:</label>
+                <div class="controls">
+                  <select id="regimenA" class="select-regimen">
+                    <option value="First Regimen">First Regimen</option>
+                    <option value="Second Regimen">Second Regimen</option>
+                    <option value="Third Regimen">Third Regimen</option>
+                  </select>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" style="width:140px;">Duration:</label>
+                <div class="controls controls-regimen">
+                  <select id="regimenADuration" class="select-regimen">
+                    <option value="One Week">One Week</option>
+                    <option value="Two Weeks">Two Weeks</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <form class="form-horizontal" action="#">
+            <h4 class="heading heading-shaddow">Second Regimen
+              <br>
+            </h4>
+          </form>
+          <div class="well">
+            <form class="form-horizontal" action="#">
+              <div class="control-group">
+                <label class="control-label" style="width:140px;">Regimen:</label>
+                <div class="controls" style="margin-left:160px;">
+                  <select id="regimenB" class="select-regimen">
+                    <option value="First Regimen">First Regimen</option>
+                    <option value="Second Regimen">Second Regimen</option>
+                    <option value="Third Regimen">Third Regimen</option>
+                  </select>
+                </div>
+              </div>  
+              <div class="control-group">
+                <label class="control-label" style="width:140px;">Duration:</label>
+                <div class="controls" style="margin-left:160px;">
+                  <select id="regimenBDuration" class="select-regimen">
+                    <option value="One Week">One Week</option>
+                    <option value="Two Weeks">Two Weeks</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div>
+            <form class="form-horizontal" action="#">
+              <div class="control-group">
+                <label id="lblPeriods" class="control-label">Periods:</label>
+                <div class="controls">
+                  <select id="regimenPeriod" class="select-regimen">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div>
+        <form class="form-horizontal" action="#">
+          <h3 class="heading heading-shaddow">Outcomes
+            <br>
+          </h3>
+        </form>
+        <div class="well">
+          <p>Please choose the desired outcomes, which will dictate which surveys are
+            displayed to the user:</p>
+          <label class="checkbox">
+            <input type="checkbox" value="">
+            <span class="">Outcome1 (Survey1, Survey2)</span>
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" value="">
+            <span class="">Outcome2 (Survey3)</span>
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" value="">
+            <span class="">Outcome3 (Survey1, Survey3, Survey4)</span>
+          </label>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span4"></div>
+        <div class="span4" style="padding-bottom: 20px">
+          <button class="btn btn-large btn-block btn-success" type="button">Create</button>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid container-fluid-footer">
+      <div class="row-fluid">
+        <span class="span6">
+          <p class="logo-easel">@easelapp</p>
+        </span>
+        <span class="span6" align="right">
+          <p class="logo-ohmage">Powered by ohmage
+            <br>
+          </p>
+        </span>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+        function load() {
+            // Setup the "Select User" section.
+            $("#selectUser")
+               .change(
+                    function() 
+                    {
+                        if(this.selectedIndex === 0)
+                        {
+                            $("#inputNewUserUsername").fadeIn(200);
+                            $("#lblNewUserPassword").fadeIn(200);
+                            $("#divNewUserPassword").fadeIn(200);
+                        }
+                        else
+                        {
+                            $("#inputNewUserUsername").fadeOut(200);
+                            $("#lblNewUserPassword").fadeOut(200);
+                            $("#divNewUserPassword").fadeOut(200);   
+                        }
+                    }
+                );
+            
+            getUsers();
+        }
+        
+        /**
+         * Retrieves a cookie's value.
+         */
+        function getCookie(c_name)
+        {
+            var i,x,y,ARRcookies=document.cookie.split(";");
+            for(i = 0; i < ARRcookies.length; i++)
+            {
+                x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+                y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+                x=x.replace(/^\s+|\s+$/g,"");
+                if (x==c_name)
+                {
+                    return unescape(y);
+                }
+            }
+        }
+        
+        /**
+         * Redirects the user to the login page.
+         */
+        function redirectToLogin() {
+            <!--
+            //document.location = "/";
+            //-->
+        }
+        
+        /**
+         * Retrieves the authentication token cookie or redirects the user to
+         * the login page.
+         *
+         * @return The user's authentication token or null if no authentication
+         *         token exists.
+         */
+        function getAuthToken() {
+            // Attempt to retrieve the authentication token.
+            var authToken = getCookie("auth_token");
+            
+            // If the token is missing, redirect the user back to the login
+            // page.
+            if(
+                (authToken === null) ||
+                (typeof authToken === "undefined") ||
+                (authToken === ""))
+            {
+                // Set the authentication token to null;
+                authToken = null;
+                
+                // Send the user to the login page.
+                redirectToLogin();
+            }
+            
+            // Return whatever we have as the authentication token.
+            return authToken;
+        }
+        
+        /**
+         * Retrieves the list of users visible to this user via their classes.
+         *
+         * @return A JSON array of the users.
+         */
+        function getUsers() {
+            var classUrn = "urn:class:Trialist";
+            
+            // Build the failure function.
+            var failure = function() {
+                alert("There was an error retrieving the list of users.");
+            } 
+            // Build the success function.
+            var success = function(data) {
+                // Check that we indicated success.
+                if(data['result'] === "success") {
+                    // Connect to the list of users element in the HTML.
+                    var userListElement = $("#selectUser");
+                    
+                    // Iterate over all of the classes.
+                    for(var currClassUrn in data['data']) {
+                        // We are only concerned with the Trialist class.
+                        if(currClassUrn !== campaignUrn) {
+                            continue;
+                        }
+                        
+                        // Get the current class object.
+                        var classObject = data['data'][currClassUrn];
+                        
+                        // Iterate over all of the users in the current class.
+                        for(var user in classObject['users']) {
+                            userListElement
+                                .append(
+                                    "<option value=\"" + user + "\">" +
+                                       user +
+                                       "</option>");
+                        }
+                    }
+                }
+                else {
+                    var failureObject = data['errors'][0];
+                    if(failureObject['code'] === "0200") {
+                        redirectToLogin();
+                    }
+                    else {
+                        alert("Error reading the data: " + failureObject['text']);
+                    }
+                }
+            }
+            
+            // Build the parameters and make the request.
+            var authToken = getAuthToken();
+            if(authToken != null) {
+                var parameters = {
+                        "client" : "TrialistWeb",
+                        "auth_token" : authToken,
+                        "class_urn_list" : classUrn
+                };
+                $.post("/app/class/read", parameters, success).fail(failure);
+            }
+        }
+        
+        /**
+         * Get the campaign definition.
+         */
+        function getCampaignDefinition() {
+            var campaignUrn = "urn:ohmage:campaign:trialist:configuration";
+
+            // Build the failure function.
+            var failure = function() {
+                alert("There was an error retrieving the campaign.");
+            }
+            // Build the success function.
+            var success = function(data) {
+                // Check that we indicated success.
+                if(data['result'] === "success") {
+                    // Connect to the list of users element in the HTML.
+                    var userListElement = $("#selectUser");
+                    
+                    // Iterate over all of the campaigns.
+                    for(var currCampaignUrn in data['data']) {
+                        // We are only concerned with the Trialist campaign.
+                        if(currCampaignUrn !== campaignUrn) {
+                            continue;
+                        }
+                        
+                        // Get the Trialist campaign XML.
+                        var xml = data['data'][currCampaignUrn]['xml'];
+
+                        
+                    }
+                }
+                else {
+                    var failureObject = data['errors'][0];
+                    if(failureObject['code'] === "0200") {
+                        redirectToLogin();
+                    }
+                    else {
+                        alert("Error reading the data: " + failureObject['text']);
+                    }
+                }
+            }
+            
+            // Build the parameters and make the request.
+            var authToken = getAuthToken();
+            if(authToken != null) {
+                var parameters = {
+                        "client" : "TrialistWeb",
+                        "auth_token" : authToken,
+                        "campaign_urn_list" : campaignUrn,
+                        "output_format" : "long"
+                };
+                $.post("/app/campaign/read", parameters, success)
+                    .fail(failure);
+            }
+        }
+    </script>
+  </body>
+</html>
