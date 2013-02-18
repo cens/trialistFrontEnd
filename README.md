@@ -1,4 +1,1 @@
-trialistFrontEnd
-================
-
-The front end for the Trialist application.
+To build run, "ant clean dist".
