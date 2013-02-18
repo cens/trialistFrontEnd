@@ -2,9 +2,13 @@
 <project name="Trialist" basedir="." default="dist">
   <property name="web" location="web" />
   <property name="dist" location="dist" />
+    
+  <target name="clean" depends="" description="Cleans the project.">
+    <delete dir="${dist}" />
+  </target>
 
   <target name="dist" depends="" description="Builds the WAR file.">
-    <mkdir dir="dist" />
+    <mkdir dir="${dist}" />
     <war
     	webxml="${web}/WEB-INF/web.xml"
     	destfile="${dist}/${ant.project.name}.war">
