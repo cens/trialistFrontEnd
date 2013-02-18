@@ -1,0 +1,613 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  
+  <head>
+    <title>Trialist Setup</title>
+    
+    <!-- Bootstrap stuff -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link href="https://fonts.googleapis.com/css?family=Limelight|Flamenco|Federo|Yesteryear|Josefin Sans|Spinnaker|Sansita One|Handlee|Droid Sans|Oswald:400,300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="bootstrap/css/bootstrap.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="bootstrap/css/bootstrap-responsive.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    
+    <!-- CSS Stuff -->
+    <link href="css/UserSetup.css" media="screen" rel="stylesheet" type="text/css" />
+    
+    <!-- jQuery stuff -->
+    <script src="js/jquery-1.9.0.min.js"></script>
+    
+    <!-- Wicked Good XPath -->
+    <script src="js/wgxpath.install.js"></script>
+  </head>
+  
+  <body onload="init()">
+    <div class="container">
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <span class="span12">
+            <div class="page-header">
+              <h1>Trialist Setup</h1>
+            </div>
+          </span>
+        </div>
+      </div>
+      <br />
+      <br />
+      <div>
+        <form class="form-horizontal" action="#">
+          <h3 class="heading heading-shaddow">Patient</h3>
+        </form>
+        <div class="well">
+          <form class="form-horizontal" action="#">
+            <div class="control-group">
+              <label class="control-label">Username:</label>
+              <div class="controls">
+                <select id="selectUser">
+                  <option value="New User" selected="selected">New Patient</option>
+                </select>
+                <input id="inputNewUserUsername" class="textinput" type="text" placeholder="New Username">
+              </div>
+            </div>
+          </form>
+          <form class="form-horizontal" action="#">
+            <div id="divNewUserPassword" class="control-group">
+              <label class="control-label">Password:</label>
+              <div class="control-group">
+                <div class="controls">
+                  <input class="textinput" type="password" placeholder="New User Password">
+                  <input class="textinput" type="password" placeholder="Retype Password">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div>
+        <form class="form-horizontal" action="#">
+          <h3 class="heading heading-shaddow">Study Setup
+            <br>
+          </h3>
+        </form>
+        <div class="well">
+          <form class="form-horizontal" action="#">
+            <div class="control-group">
+              <label class="control-label">Regimen:</label>
+              <div class="controls">
+                <select id="regimen" class="select-regimen">
+                </select>
+              </div>
+            </div>
+          </form>
+          <form class="form-horizontal" action="#">
+            <div class="control-group">
+              <label class="control-label">Period Length:</label>
+              <div class="controls">
+                <select id="regimenDuration">
+                </select>
+              </div>
+            </div>
+          </form>
+          <form class="form-horizontal" action="#">
+            <div class="control-group">
+              <label class="control-label">Number of Cycles:</label>
+              <div class="controls">
+                <select id="regimenCycles" class="select">
+                </select>
+              </div>
+            </div>
+          </form>
+          <!-- 
+                A value needs to be randomly generated when submitting the
+                    survey.
+          <form class="form-horizontal" action="#">
+            <div class="control-group">
+              <label class="control-label">Order:</label>
+              <div class="controls">
+                <select id="regimenOrder" class="select">
+                </select>
+              </div>
+            </div>
+          </form>
+          -->
+        </div>
+      </div>
+      <div>
+        <form class="form-horizontal" action="#">
+          <h3 class="heading heading-shaddow">Optional Outcomes
+            <br>
+          </h3>
+        </form>
+        <div id="outcomes" class="well">
+          <p>Please choose if you wish to track any of the following optional outcomes during the study:</p>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span4"></div>
+        <div class="span4" style="padding-bottom: 20px">
+          <button id="create" class="btn btn-large btn-block btn-success" type="button" onclick="create()">Create</button>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid container-fluid-footer">
+      <div class="row-fluid">
+        <span class="span6">
+          <p class="logo-easel">@easelapp</p>
+        </span>
+        <span class="span6" align="right">
+          <p class="logo-ohmage">Powered by ohmage
+            <br>
+          </p>
+        </span>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+        var REQUIRED_SURVEY_IDS = 
+        	[
+        	    'constipationSurvey',
+                'fatigueSurvey',
+                'nauseaSurvey',
+                'promisFourItemPainInterferenceShortForm',
+                'promisThreeItemPainIntensityShortForm',
+                'qualityOfLifeSurvey',
+                'sleepDisturbanceSurvey',
+        	    'sleepinessSurvey'
+        	];
+    
+        function init() {
+        	// Install the Wicked Good XPath library.
+        	wgxpath.install();
+        	
+            // Setup the "Select User" section.
+            $("#selectUser")
+               .change(
+                    function() 
+                    {
+                        if(this.selectedIndex === 0)
+                        {
+                            $("#inputNewUserUsername").fadeIn(200);
+                            $("#divNewUserPassword").fadeIn(200);
+                        }
+                        else
+                        {
+                            $("#inputNewUserUsername").fadeOut(200);
+                            $("#divNewUserPassword").fadeOut(200); 
+                        }
+                    }
+                );
+            
+            try {
+                getUsers();
+                getCampaignDefinition();
+            }
+            catch(e) {
+            	alert("Error: " + e);
+            }
+        }
+        
+        /**
+         * Retrieves a cookie's value.
+         */
+        function getCookie(name)
+        {
+            var i,x,y,ARRcookies=document.cookie.split(";");
+            for(i = 0; i < ARRcookies.length; i++)
+            {
+                x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+                y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+                x=x.replace(/^\s+|\s+$/g,"");
+                if (x == name)
+                {
+                    return unescape(y);
+                }
+            }
+        }
+        
+        /**
+         * Converts an XML string into a DOM object.
+         */
+        function convertXmlStringToDomObject(xml) {
+        	var xmlDoc = null;
+        	
+			if(window.DOMParser)
+			{
+			    var parser = new DOMParser();
+			    xmlDoc = parser.parseFromString(xml, "text/xml");
+			}
+			else // Internet Explorer
+			{
+			    xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+			    xmlDoc.async = false;
+			    xmlDoc.loadXML(xml); 
+			}
+			
+			return xmlDoc;
+        }
+        
+        /**
+         * Redirects the user to the login page.
+         */
+        function redirectToLogin() {
+            <!--
+            document.location = "/";
+            //-->
+        }
+        
+        /**
+         * Retrieves the authentication token cookie or redirects the user to
+         * the login page.
+         *
+         * @return The user's authentication token or null if no authentication
+         *         token exists.
+         */
+        function getAuthToken() {
+            // Attempt to retrieve the authentication token.
+            var authToken = getCookie("auth_token");
+            
+            // If the token is missing, redirect the user back to the login
+            // page.
+            if(
+                (authToken === null) ||
+                (typeof authToken === "undefined") ||
+                (authToken === ""))
+            {
+                // Set the authentication token to null;
+                authToken = null;
+                
+                // Send the user to the login page.
+                redirectToLogin();
+            }
+            
+            // Return whatever we have as the authentication token.
+            return authToken;
+        }
+        
+        /**
+         * Retrieves the list of users visible to this user via their classes.
+         *
+         * @return A JSON array of the users.
+         */
+        function getUsers() {
+            var classUrn = "urn:class:Trialist";
+            
+            // Build the failure function.
+            var failure = function() {
+                throw "There was an error retrieving the list of users.";
+            } 
+            // Build the success function.
+            var success = function(data) {
+                // Check that we indicated success.
+                if(data['result'] === "success") {
+                    // Connect to the list of users element in the HTML.
+                    var userListElement = $("#selectUser");
+                    
+                    // Iterate over all of the classes.
+                    for(var currClassUrn in data['data']) {
+                        // We are only concerned with the Trialist class.
+                        if(currClassUrn !== classUrn) {
+                            continue;
+                        }
+                        
+                        // Get the current class object.
+                        var classObject = data['data'][currClassUrn];
+                        
+                        // Iterate over all of the users in the current class.
+                        for(var user in classObject['users']) {
+                            userListElement
+                                .append(
+                                    "<option value=\"" + user + "\">" +
+                                       user +
+                                       "</option>");
+                        }
+                    }
+                }
+                else {
+                    var failureObject = data['errors'][0];
+                    if(failureObject['code'] === "0200") {
+                        redirectToLogin();
+                    }
+                    else {
+                        throw "Error reading the data: " + failureObject['text'];
+                    }
+                }
+            }
+            
+            // Build the parameters and make the request.
+            var authToken = getAuthToken();
+            if(authToken != null) {
+                var parameters = {
+                        "client" : "TrialistWeb",
+                        "auth_token" : authToken,
+                        "class_urn_list" : classUrn
+                };
+                $.post("/app/class/read", parameters, success).fail(failure);
+            }
+        }
+        
+        /**
+         * Get the campaign definition.
+         */
+        function getCampaignDefinition() {
+            var campaignUrn = "urn:ohmage:campaign:trialist:2013021800";
+            var setupSurveyId = "setup";
+
+            // Build the failure function.
+            var failure = function() {
+                throw "There was an error retrieving the campaign.";
+            }
+            // Build the success function.
+            var success = function(data) {
+                // Check that we indicated success.
+                if(data['result'] === "success") {
+                    // Iterate over all of the campaigns.
+                    for(var currCampaignUrn in data['data']) {
+                        // We are only concerned with the Trialist campaign.
+                        if(currCampaignUrn !== campaignUrn) {
+                            continue;
+                        }
+                        
+                        // Get a handle for all of the necessary objects.
+                        var regimen = $("#regimen");
+                        var regimenDuration = $("#regimenDuration");
+                        var regimenCycles = $("#regimenCycles");
+                        var regimenOrder = $("#regimenOrder");
+                        
+                        var outcomes = $("#outcomes");
+                        
+                        // Get the Trialist campaign XML.
+                        var xml = data['data'][currCampaignUrn]['xml'];
+                        var xmlObject = convertXmlStringToDomObject(xml);
+                        
+                        // Get the configuration surveys.
+                        var setupSurveys = 
+                        	document
+                        	    .evaluate(
+                                    '/campaign/surveys/survey[id="' + 
+                                        setupSurveyId + 
+                                        '"]',
+                                    xmlObject);
+                        if(setupSurveys.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                        	throw "The setup survey is not an XML node.";
+                        }
+                        
+                        // Get the single configuration survey.
+                        var setupSurvey = setupSurveys.iterateNext();
+                        if(setupSurvey === null) {
+                            throw "The setup survey is missing.";
+                        }
+                        
+                        // Populate the regimen HTML select.
+                        createSelectOptionsFromPromptProperties(
+                                setupSurvey,
+                                "regimen",
+                                regimen);
+                        
+                        // Populate the duration.
+                        createSelectOptionsFromPromptProperties(
+                                setupSurvey,
+                                "regimenDuration",
+                                regimenDuration);
+                        
+                        // Populate the number of cycles.
+                        createSelectOptionsFromPromptProperties(
+                                setupSurvey,
+                                "numberComparisonCycles",
+                                regimenCycles);
+                        
+                        // Populate the number of cycles.
+                        createSelectOptionsFromPromptProperties(
+                                setupSurvey,
+                                "random",
+                                regimenOrder);
+                        
+                        // Get the list of surveys and their descriptions and
+                        // add them to the outcomes.
+                        var otherSurveys = 
+                            document
+                                .evaluate(
+                                    '/campaign/surveys/survey[id!="' + 
+                                        setupSurveyId + 
+                                        '"]',
+                                    xmlObject);
+                        if(otherSurveys.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                            throw "Another survey is not an XML node.";
+                        }
+                        
+                        // Create the outcome check boxes from the surveys.
+                        createCheckBoxesFromSurveys(
+                            outcomes,
+                            otherSurveys,
+                            REQUIRED_SURVEY_IDS);
+                    }
+                }
+                else {
+                    var failureObject = data['errors'][0];
+                    if(failureObject['code'] === "0200") {
+                        redirectToLogin();
+                    }
+                    else {
+                        throw "Error reading the data: " + failureObject['text'];
+                    }
+                }
+            }
+            
+            // Build the parameters and make the request.
+            var authToken = getAuthToken();
+            if(authToken != null) {
+                var parameters = {
+                        "client" : "TrialistWeb",
+                        "auth_token" : authToken,
+                        "campaign_urn_list" : campaignUrn,
+                        "output_format" : "long"
+                };
+                $.post("/app/campaign/read", parameters, success, "json")
+                    .fail(failure);
+            }
+        }
+        
+        /**
+         * Finds a specific prompt in a survey, and populates the given HTML
+         * select with the properties of this prompt. This prompt must be a
+         * [custom] single or multi choice prompt.
+         */
+        function createSelectOptionsFromPromptProperties(survey, promptId, select) {
+        	// Get the prompt elements.
+        	var prompts =
+                document.evaluate('.//prompt[id="' + promptId + '"]', survey);
+            if(prompts.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                throw "The " + promptId + " prompt is not an XML node.";
+            }
+            
+            // Get the singular prompt element.
+            var prompt = prompts.iterateNext();
+            if(prompt === null) {
+                throw "The " + promptId + " prompt is missing.";
+            }
+            
+            // Get the prompt's properties.
+            var properties = document.evaluate('.//property', prompt);
+            if(properties.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                throw "The properties for " + promptId + " are not XML nodes.";
+            }
+            
+            // Using the properties, populate the HTML select.
+            populateSelectBox(select, properties);
+        }
+        
+        /**
+         * Populates a HTML select tag with the given single choice prompt
+         * properties.
+         */
+        function populateSelectBox(select, properties) {
+            var currProperty = null;
+            while((currProperty = properties.iterateNext()) !== null) {
+                // XPath to the key element.
+                var keyElements =
+                    document.evaluate('./key', currProperty);
+                if(keyElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                    throw "The property key is not an HTML object.";
+                }
+                
+                // Get the key element.
+                var keyElement = keyElements.iterateNext();
+                if(keyElement === null) {
+                    throw "The property is missing its key.";
+                }
+                
+                // Get the key value.
+                var key = keyElement.textContent;
+                
+                // XPath to the label element.
+                var labelElements =
+                    document.evaluate('./label', currProperty);
+                if(labelElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                    throw "The property key is not an HTML object: " + key;
+                }
+                
+                // Get the label element.
+                var labelElement = labelElements.iterateNext();
+                if(labelElement === null) {
+                    throw "The property is missing its label: " + key;
+                }
+                
+                // Get the label value.
+                var label = labelElement.textContent;
+                
+                // Add the value to the select's choices.
+                select
+                    .append(
+                        '<option value="' + 
+                            key + 
+                            '">' + 
+                            label + 
+                        '</option>');
+            }
+        }
+        
+        /**
+         * Populates a HTML select tag with the given single choice prompt
+         * properties.
+         */
+        function createCheckBoxesFromSurveys(div, surveys, ignoredIds) {
+            var currSurvey = null;
+            
+            if((typeof ignoredIds === "undefined") || (ignoredIds === null)) {
+            	ignoredIds = [];
+            }
+            
+            while((currSurvey = surveys.iterateNext()) !== null) {
+                // XPath to the ID element.
+                var idElements =
+                    document.evaluate('./id', currSurvey);
+                if(idElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                    throw "The ID is not an HTML object.";
+                }
+                
+                // Get the ID element.
+                var idElement = idElements.iterateNext();
+                if(idElement === null) {
+                    throw "The survey is missing its ID.";
+                }
+                
+                // Get the ID value.
+                var id = idElement.textContent;
+                
+                // If the ID is in the list of IDs to ignore, skip it.
+                if(ignoredIds.indexOf(id) >= 0) {
+                	continue;
+                }
+                
+                // XPath to the name element.
+                var titleElements =
+                    document.evaluate('./title', currSurvey);
+                if(titleElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                    throw "The title is not an HTML object.";
+                }
+                
+                // Get the name element.
+                var titleElement = titleElements.iterateNext();
+                if(titleElement === null) {
+                    throw "The survey is missing its title.";
+                }
+                
+                // Get the name value.
+                var title = titleElement.textContent;
+                
+                // XPath to the description element.
+                var descriptionElements =
+                    document.evaluate('./description', currSurvey);
+                if(descriptionElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                    throw "The description is not an HTML object: " + title;
+                }
+                
+                // Get the description element if given; otherwise, set the 
+                // description to null.
+                var description = null;
+                var descriptionElement = descriptionElements.iterateNext();
+                if(descriptionElement !== null) {
+                    description = descriptionElement.textContent;
+                }
+                
+                // Add the value to the regimen A choices.
+                div
+                    .append(
+                        '<label class="checkbox">' +
+                            '<input type="checkbox" value="' + id + '">' +
+                            '<span class="">' + title + 
+                                ((description === null) ? '' : ' (' + description + ')') +
+                            '</span>' +
+                        '</label>');
+            }
+        }
+        
+        /**
+         * Makes the call to the campaign assignment API.
+         */
+        function create() {
+        	
+        }
+    </script>
+  </body>
+</html>

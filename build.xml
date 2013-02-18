@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<project name="Trialist" basedir="." default="dist">
+  <property name="web" location="web" />
+  <property name="dist" location="dist" />
+
+  <target name="dist" depends="" description="Builds the WAR file.">
+    <mkdir dir="dist" />
+    <war
+    	webxml="${web}/WEB-INF/web.xml"
+    	destfile="${dist}/${ant.project.name}.war">
+      <webinf dir="${web}/WEB-INF" />
+      <metainf dir="${web}/META-INF" />
+      <zipfileset dir="${web}">
+        <exclude name="META-INF/**" />
+        <exclude name="WEB-INF/**" />
+      </zipfileset>
+    </war>
+  </target>
+  
+</project>
