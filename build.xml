@@ -8,6 +8,8 @@
   </target>
 
   <target name="dist" depends="" description="Builds the WAR file.">
+    <!-- Create the META-INF directory if it doesn't exist. -->
+    <mkdir dir="${web}/META-INF" />
     <mkdir dir="${dist}" />
     <war
     	webxml="${web}/WEB-INF/web.xml"
