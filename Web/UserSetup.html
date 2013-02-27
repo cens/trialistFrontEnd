@@ -22,8 +22,82 @@
     <script src="js/wgxpath.install.js"></script>
   </head>
   
-  <body onload="init()">
+  <body>
+    <!-- 
+        This JavaScript should be run before any of the page is rendered. 
+     -->
+    <script type="text/javascript">
+		/**
+		 * Retrieves a cookie's value.
+		 */
+		function getCookie(name)
+		{
+		    var i,x,y,ARRcookies=document.cookie.split(";");
+		    for(i = 0; i < ARRcookies.length; i++)
+		    {
+		        x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+		        y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+		        x=x.replace(/^\s+|\s+$/g,"");
+		        if (x == name)
+		        {
+		            return unescape(y);
+		        }
+		    }
+		}
+		
+        /**
+         * Redirects the user to the login page.
+         */
+        function redirectToLogin() {
+            <!--
+            document.location = "/";
+            //-->
+        }
+        
+        /**
+         * Retrieves the authentication token cookie or redirects the user to
+         * the login page.
+         *
+         * @return The user's authentication token or null if no authentication
+         *         token exists.
+         */
+        function getAuthToken() {
+            // Attempt to retrieve the authentication token.
+            var authToken = getCookie("auth_token");
+            
+            // If the token is missing, redirect the user back to the login
+            // page.
+            if(
+                (authToken === null) ||
+                (typeof authToken === "undefined") ||
+                (authToken === ""))
+            {
+                // Set the authentication token to null;
+                authToken = null;
+                
+                // Send the user to the login page.
+                redirectToLogin();
+            }
+            
+            // Return whatever we have as the authentication token.
+            return authToken;
+        }
+        
+        // Check for the authentication token before loading the page. If it
+        // doesn't exist, we will be redirected to the homepage before any of
+        // the UI elements are rendered.
+        getAuthToken();
+    </script>
     <div class="container">
+      <div id="alertModal" class="modal hide fade">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3 id="alertHeader"></h3>
+        </div>
+        <div class="modal-body">
+          <p id="alertInfo"></p>
+        </div>
+      </div>
       <div class="container-fluid">
         <div class="row-fluid">
           <span class="span12">
@@ -82,7 +156,7 @@
             <div class="control-group">
               <label class="control-label">Period Length:</label>
               <div class="controls">
-                <select id="regimenDuration">
+                <select id="regimenDuration" select>
                 </select>
               </div>
             </div>
@@ -140,7 +214,11 @@
         </span>
       </div>
     </div>
-    
+    <!--
+        The page ends with all of the JavaScript which will speed up how
+        quickly the page is rendered and shouldn't even be run until after all
+        of the UI elements have been setup.
+     -->
     <script type="text/javascript">
         // The list of radio buttons refrencing the regimen.
         var REGIMEN_RADIOS = [];
@@ -186,53 +264,34 @@
         var PROMPT_ID_RANDOM = "random";
         var PROMPT_ID_PRIMARY_OUTCOME = "primaryOutcome";
     
-        function init() {
-            // Install the Wicked Good XPath library.
-            wgxpath.install();
-            
-            // Setup the "Select User" section.
-            $("#selectUser")
-               .change(
-                    function() 
-                    {
-                        if(this.selectedIndex === 0)
-                        {
-                            $("#inputNewUserUsername").fadeIn(200);
-                            $("#divNewUserPassword").fadeIn(200);
-                        }
-                        else
-                        {
-                            $("#inputNewUserUsername").fadeOut(200);
-                            $("#divNewUserPassword").fadeOut(200); 
-                        }
-                    }
-                );
-            
-            try {
-                getUsers();
-                getCampaignDefinition();
-            }
-            catch(e) {
-                alert("Error: " + e);
-            }
-        }
+        // Install the Wicked Good XPath library.
+        wgxpath.install();
         
-        /**
-         * Retrieves a cookie's value.
-         */
-        function getCookie(name)
-        {
-            var i,x,y,ARRcookies=document.cookie.split(";");
-            for(i = 0; i < ARRcookies.length; i++)
-            {
-                x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-                y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-                x=x.replace(/^\s+|\s+$/g,"");
-                if (x == name)
+        // Setup the "Select User" section.
+        $("#selectUser")
+           .change(
+                function() 
                 {
-                    return unescape(y);
+                    if(this.selectedIndex === 0)
+                    {
+                        $("#inputNewUserUsername").fadeIn(200);
+                        $("#divNewUserPassword").fadeIn(200);
+                    }
+                    else
+                    {
+                        $("#inputNewUserUsername").fadeOut(200);
+                        $("#divNewUserPassword").fadeOut(200); 
+                    }
                 }
-            }
+            );
+        
+        // Populate the page's UI elements.
+        try {
+            getUsers();
+            getCampaignDefinition();
+        }
+        catch(e) {
+            alertUser("Error", "An unknown error occurred: " + e);
         }
         
         /**
@@ -293,41 +352,12 @@
         }
         
         /**
-         * Redirects the user to the login page.
+         * Uses some UI element to alert the user that something has happened.
          */
-        function redirectToLogin() {
-            <!--
-            document.location = "/";
-            //-->
-        }
-        
-        /**
-         * Retrieves the authentication token cookie or redirects the user to
-         * the login page.
-         *
-         * @return The user's authentication token or null if no authentication
-         *         token exists.
-         */
-        function getAuthToken() {
-            // Attempt to retrieve the authentication token.
-            var authToken = getCookie("auth_token");
-            
-            // If the token is missing, redirect the user back to the login
-            // page.
-            if(
-                (authToken === null) ||
-                (typeof authToken === "undefined") ||
-                (authToken === ""))
-            {
-                // Set the authentication token to null;
-                authToken = null;
-                
-                // Send the user to the login page.
-                redirectToLogin();
-            }
-            
-            // Return whatever we have as the authentication token.
-            return authToken;
+        function alertUser(header, info) {
+        	$("#alertHeader").text(header);
+        	$("#alertInfo").text(info);
+        	$("#alertModal").modal('show');
         }
         
         /**
@@ -338,7 +368,9 @@
         function getUsers() {
             // Build the failure function.
             var failure = function() {
-                alert("There was an error retrieving the list of users.");
+                alertUser(
+                    "Error Retrieving Users",
+                    "There was an error retrieving the list of users.");
             } 
             // Build the success function.
             var success = function(data) {
@@ -374,12 +406,15 @@
 	                        redirectToLogin();
 	                    }
 	                    else {
-	                        throw "Error reading the data: " + failureObject['text'];
+	                        throw "Error reading the data: " + 
+	                                failureObject['text'];
 	                    }
 	                }
 	            }
 	            catch(e) {
-	            	alert(e);
+	            	alertUser(
+	            		"Error Loading Users",
+	            		"There was an error loading the list of users: " + e);
 	            }
             }
             
@@ -401,7 +436,9 @@
         function getCampaignDefinition() {
             // Build the failure function.
             var failure = function() {
-                alert("There was an error retrieving the campaign.");
+                alertUser(
+                	"Server Communication Error",
+                	"There was an error while communicating with the server.");
             }
             // Build the success function.
             var success = function(data) {
@@ -508,7 +545,9 @@
 	                }
             	}
             	catch(e) {
-            		alert(e);
+            		alertUser(
+            			"Error Populating the Page",
+            			"There was an error populating the page: " + e);
             	}
             }
             
@@ -635,6 +674,10 @@
                             label + 
                         '</option>');
             }
+            
+            // Reset the selected index to -1, so that the user must explicitly
+            // choose an option.
+            select.prop('selectedIndex', -1);
         }
         
         /**
@@ -705,6 +748,10 @@
                                     '' : ' (' + description + ')') +
                         '</option>');
             }
+            
+            // Reset the selected index to -1, so that the user must explicitly
+            // choose an option.
+            select.prop('selectedIndex', -1);
         }
         
         /**
@@ -915,18 +962,27 @@
                     
                     // If the username is null or empty, alert the user.
                     if((username === null) || (username.length === 0)) {
+                        alertUser(
+                        	"Missing Username",
+                        	"A username must be given for the new user.");
                         usernameElement.focus();
-                        throw "A username must be given for the new user.";
+                        return;
                     }
                     // If the password is null or empty, alert the user.
                     else if((password === null) || (password.length === 0)) {
+                        alertUser(
+                        	"Missing Password",
+                        	"A password must be given for the new user.");
                         passwordElement.focus();
-                        throw "A password must be given for the new user.";
+                        return;
                     }
                     // If the passwords don't match, alert the user.
                     if(password !== $("#inputNewUserPasswordRetype").val()) {
+                        alertUser(
+                        	"Passwords Do Not Match",
+                        	"The two passwords do not match.");
                         passwordElement.focus();
-                        throw "The two passwords do not match.";
+                        return;
                     }
                 }
                 // Otherwise, get the user's username.
@@ -936,7 +992,7 @@
                 
                 // Cycle through the regimens, find the one that is checked,
                 // and set is value as the regimen value.
-                var regimen;
+                var regimen = null;
                 for(var i = 0; i < REGIMEN_RADIOS.length; i++) {
                     // Get the current regimen radio.
                     var regimenRadio = REGIMEN_RADIOS[i];
@@ -946,12 +1002,30 @@
                         regimen = regimenRadio.val();
                     }
                 }
+                if(regimen === null) {
+                	alertUser(
+                		"No Regimen Selected",
+                		"Please choose a regimen.");
+                	return;
+                }
                 
                 // Get the regimen duration value.
                 var regimenDuration = $("#regimenDuration").val();
+                if(regimenDuration === null) {
+                	alertUser(
+                		"No Length Selected",
+                		"Please choose a period length.");
+                	return;
+                }
                 
                 // Get the number of regimen cycles.
                 var regimenCycles = $("#regimenCycles").val();
+                if(regimenCycles === null) {
+                    alertUser(
+                        "No Cycles Selected",
+                        "Please choose a number of cycles.");
+                    return;
+                }
                 
                 // Generate a random value for the pattern.
                 var regimenRandom =
@@ -959,6 +1033,12 @@
                 
                 // Get the primary outcome text.
                 var primaryOutcome = $("#primaryOutcome").val();
+                if(primaryOutcome === null) {
+                    alertUser(
+                        "No Primary Outcome Selected",
+                        "Please choose a primary outcome.");
+                    return;
+                }
                 
                 // Build the survey response.
                 var surveyResponse = {
@@ -1015,13 +1095,17 @@
                 
                 // Create the failure function.
                 var failure = function() {
-                	alert("There was an error.");
+                	alertUser(
+                		"Creation Failure",
+                		"The server returned an unexpected error.");
                 }
                 // Create the success function.
                 var success = function(data) {
                 	// Check that we indicated success.
                     if(data['result'] === "success") {
-                    	alert("The campaign was successfully assigned.");
+                    	alertUser(
+                    		"Success",
+                    		"The user was successfully setup.");
                     }
                     else {
                         var failureObject = data['errors'][0];
@@ -1029,8 +1113,9 @@
                             redirectToLogin();
                         }
                         else {
-                            alert(
-                                "Error assigning the campaign: " + 
+                            alertUser(
+                            	"Error",
+                                "There was an error setting up the user: " + 
                                     failureObject['text']);
                         }
                     }
@@ -1076,7 +1161,9 @@
                 }
             }
             catch(e) {
-                alert(e);
+                alertUser(
+                	"Error",
+                	"There was an error setting up the user: " + e);
             }
         }
     </script>
