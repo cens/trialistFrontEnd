@@ -163,7 +163,7 @@
             <div class="control-group">
               <label class="control-label">Period Length:</label>
               <div class="controls">
-                <select id="regimenDuration" select>
+                <select id="regimenDuration" title="Time on each drug.">
                 </select>
               </div>
             </div>
@@ -317,6 +317,15 @@
                 opacity: 0.7
             }
         );
+        $("#regimenDuration")
+        .tooltip(
+            {
+                position: "center right",
+                offset: [-2, 10],
+                effect: "fade",
+                opacity: 0.7
+            }
+        );
         
         // Populate the page's UI elements.
         try {
@@ -366,14 +375,7 @@
             }
             else // Internet Explorer
             {
-                result =
-                    document
-                        .evaluate(
-                            expression,
-                            node,
-                            null, 
-                            XPathResult.ANY_TYPE,
-                            null);
+                result = node.selectNodes(expression);
             }
             return result;
         }
