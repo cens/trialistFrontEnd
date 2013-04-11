@@ -68,6 +68,7 @@
   </session-config>
   
   <!-- Force the use of SSL. -->
+  <!-- 
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Restricted URLs</web-resource-name>
@@ -77,4 +78,5 @@
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
+   -->
 </web-app>
