@@ -137,7 +137,90 @@
         </div>
       </div>
       <br />
-      <br />
+      <div id="helpArea" class="well">
+        <h3>General Principles when prescribing opioids for chronic pain</h3>
+        <p>
+          <ul>
+            <li>Use the lowest possible effective dose when opioid analgesics are considered for the management of pain.</li>
+            <li>When switching opioids, find an equivalent dose based on the patient's current dosage and consider a reduction for incomplete cross tolerance (see hyperlink below for opioid equianalgesic dosages).</li>
+            <li>To assess for opioid misuse or addiction, consider using targeted history or validated screening tools (see hyperlink below for paper questionnaires).</li>
+            <li>Prescribers are advised to access a prescription monitoring program (PMP) to ensure that patients are not involved in doctor shopping (see hyperlink below for California’s Prescription Drug Monitoring Program (CURES).</li>
+            <li>When feasible, avoid simultaneous prescribing of opioid analgesics and benzodiazepines. This combination raises the risk of inadvertent overdose.</li>
+            <li>Because of its added depressant effects, tramadol should be prescribed with caution for those patients whose medical condition requires the concomitant administration of sedatives, tranquilizers, muscle relaxants, antidepressants, or other CNS depressant drugs.</li>
+            <li>Provide information about opioid analgesics to patients receiving a prescription, such as the risks of overdose and dependence/ addiction, as well as safe storage and proper disposal of unused medications (see hyperlink below for patient instructions).</li>
+          </ul>
+        </p>
+        <h3>Online references for safe opioid prescribing</h3>
+        <table class="table table-bordered" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+          <tr>
+            <th colspan="2">Opioid safety and risk management</th>
+          </tr>
+          <tr>
+            <td>Balancing Pain Management and Prescription Opioid Abuse</td>
+            <td><a href="http://www.cdc.gov/primarycare/materials/opoidabuse/index.html">http://www.cdc.gov/primarycare/materials/opoidabuse/index.html</a></td>
+          </tr>
+          <tr>
+            <td>Preventing misuse and adverse events</td>
+            <td><a href="http://pain-topics.org/opioid_rx/safety.php">http://pain-topics.org/opioid_rx/safety.php</a></td>
+          </tr>
+          <tr>
+            <th>Opioid drug interactions</th>
+            <td><a href="https://www.painedu.org/tools/drug_drug_interactions.asp">https://www.painedu.org/tools/drug_drug_interactions.asp</a></td>
+          </tr>
+          <tr>
+            <th>Opioid equianalgesic dosages</th>
+            <td><a href="http://www.globalrph.com/narcoticonv.htm">http://www.globalrph.com/narcoticonv.htm</a></td>
+          </tr>
+          <tr>
+            <th>Opioid side effects</th>
+            <td><a href="http://www.medscape.org/viewarticle/573016">http://www.medscape.org/viewarticle/573016</a></td>
+          </tr>
+          <tr>
+            <th colspan="2">Paper questionnaires for screening before starting opioids</th>
+          </tr>
+          <tr>
+            <td>Screener and Opioid Assessment for Patients with Pain (SOAPP)</td>
+            <td><a href="http://www.painedu.org/soapp.asp">http://www.painedu.org/soapp.asp</a></td>
+          </tr>
+          <tr>
+            <td>Opioid Risk Tool (ORT)</td>
+            <td><a href="http://www.partnersagainstpain.com/printouts/Opioid_Risk_Tool.pdf">http://www.partnersagainstpain.com/printouts/Opioid_Risk_Tool.pdf</a>
+          </tr>
+          <tr>
+            <th colspan="2">Paper questionnaires for monitoring during long-term opioid therapy</th>
+          </tr>
+          <tr>
+            <td>Pain Assessment and Documentation Tool (PADT)</td>
+            <td><a href="http://www.ucdenver.edu/academics/colleges/PublicHealth/research/centers/maperc/online/Documents/Pain Assessment Documentation Tool %28PADT%29.pdf">http://www.ucdenver.edu/academics/colleges/PublicHealth/research/centers/maperc/online/Documents/Pain Assessment Documentation Tool %28PADT%29.pdf</a></td>
+          </tr>
+          <tr>
+            <td>Current Opioid Misuse Measure (COMM)</td>
+            <td><a href="http://www.painedu.org/soapp.asp">http://www.painedu.org/soapp.asp</a></td>
+          </tr>
+          <tr>
+            <th colspan="2">Patient instructions</th>
+          </tr>
+          <tr>
+            <td>A Guide to Safe Use of Pain Medicine</td>
+            <td><a href="http://www.fda.gov/downloads/ForConsumers/ConsumerUpdates/ucm095742.pdf">http://www.fda.gov/downloads/ForConsumers/ConsumerUpdates/ucm095742.pdf</a></td>
+          </tr>
+          <tr>
+            <td>Disposal of medications</td>
+            <td><a href="http://www.fda.gov/drugs/resourcesforyou/consumers/buyingusingmedicinesafely/ensuringsafeuseofmedicine/safedisposalofmedicines/ucm186187.htm">http://www.fda.gov/drugs/resourcesforyou/consumers/buyingusingmedicinesafely/ensuringsafeuseofmedicine/safedisposalofmedicines/ucm186187.htm</a></td>
+          </tr>
+          <tr>
+            <th>Prescription Drug Monitoring Program</th>
+            <td><a href="https://pmp.doj.ca.gov/pdmp/index.do">https://pmp.doj.ca.gov/pdmp/index.do</a></td>
+          </tr>
+          <tr>
+            <th colspan="2">Urine drug testing</th>
+          </tr>
+          <tr>
+            <td>Urine Drug Testing: Current Recommendations and Best Practices See Table 5 for immunoassay cross-reactions (false positives)</td>
+            <td><a href="http://www.painphysicianjournal.com/2012/july/2012;15;ES119-ES133.pdf">http://www.painphysicianjournal.com/2012/july/2012;15;ES119-ES133.pdf</a></td>
+          </tr>
+        </table>
+      </div>
       <div>
         <form class="form-horizontal" action="#">
           <h3 class="heading heading-shaddow">Patient</h3>
@@ -303,6 +386,25 @@
         var PROMPT_ID_REGIMEN_CYCLES = "numberComparisonCycles";
         var PROMPT_ID_RANDOM = "random";
         var PROMPT_ID_PRIMARY_OUTCOME = "primaryOutcome";
+
+        // Connect the help button with its functionality.
+        $("#help")
+            .click(
+                function()
+                {
+                    var helpArea = $("#helpArea");
+                    if(helpVisible) {
+                        helpArea.fadeOut(200);
+                        helpVisible = false;
+                    }
+                    else {
+                        helpArea.fadeIn(200);
+                        helpVisible = true;
+                    }
+                }
+            );
+        $("#helpArea").fadeOut(0);
+        var helpVisible = false;
         
         // Connect the logout button with its functionality.
         $("#logout")
