@@ -123,6 +123,16 @@
             <div class="page-header">
               <h1>Trialist Setup</h1>
             </div>
+            <div class="row-fluid">
+              <span class="span6">
+                <button id="help">Help</button>
+              </span>
+              <span class="span6">
+                <p align="right">
+                  <button id="logout">Logout</button>
+                </p>
+              </span>
+            </div>
           </span>
         </div>
       </div>
@@ -293,6 +303,21 @@
         var PROMPT_ID_REGIMEN_CYCLES = "numberComparisonCycles";
         var PROMPT_ID_RANDOM = "random";
         var PROMPT_ID_PRIMARY_OUTCOME = "primaryOutcome";
+        
+        // Connect the logout button with its functionality.
+        $("#logout")
+            .click(
+                function()
+                {
+                    $.post(
+                        "/app/user/logout",
+                        {"client":"Trialist"},
+                        function () {
+                            window.location = "/";
+                        }
+                    );
+                }
+            );
         
         // Setup the "Select User" section.
         $("#selectUser")
