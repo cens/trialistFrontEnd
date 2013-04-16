@@ -259,8 +259,15 @@
         <div class="well">
           <form class="form-horizontal" action="#">
             <div class="control-group">
-              <label class="control-label">Regimen:</label>
-              <div id="regimen" class="controls">
+              <label class="control-label">Regimen A:</label>
+              <div id="regimenA" class="controls">
+              </div>
+            </div>
+          </form>
+          <form class="form-horizontal" action="#">
+            <div class="control-group">
+              <label class="control-label">Regimen B:</label>
+              <div id="regimenB" class="controls">
               </div>
             </div>
           </form>
@@ -303,17 +310,21 @@
         <div class="well">
           <form class="form-horizontal" action="#">
             <div class="control-group">
-              <label class="control-label">Primary Outcome:</label>
+              <label class="control-label">Cognative Function:</label>
               <div class="controls">
-                <select id="primaryOutcome" style="width: 100%;">
+                <select id="cognativeFunction" style="width: 100%;">
                 </select>
               </div>
             </div>
           </form>
           <form class="form-horizontal" action="#">
             <div class="control-group">
-              <label class="control-label">Optional Outcomes:</label>
-              <div id="optionalOutcomes" class="controls">
+              <label class="control-label">Neuropathic Pain:</label>
+              <div class="controls">
+                <label class="checkbox">
+                  <input id="neuropathicPain" type="checkbox">
+                  <span class="">Include the neuropathic pain surveys.</span>
+                </label>
               </div>
             </div>
           </form>
@@ -342,6 +353,40 @@
         of the UI elements have been setup.
      -->
     <script type="text/javascript">
+	    // Extend the Array prototype to contain an indexOf function.
+	    if(!Array.prototype.indexOf) {
+	        Array.prototype.indexOf =
+	            function(needle) {
+		            for(var i = 0; i < this.length; i++) {
+		                if(this[i] === needle) {
+		                    return i;
+		                }
+		            }
+		            return -1;
+		        };
+	    }
+	    // Extend the Array prototype to contain an equivalency function.
+	    if(!Array.prototype.equivalent) {
+	        Array.prototype.equivalent =
+	            function(other) {
+	                if(typeof other === "undefined") {
+	                    return false;
+	                }
+	                if(other === null) {
+	                    return false;
+	                }
+	                if(this.length !== other.length) {
+	                    return false;
+	                }
+		            for(var i = 0; i < this.length; i++) {
+		                if(other.indexOf(this[i]) === -1) {
+		                    return false;
+		                }
+		            }
+		            return true;
+		        };
+		}
+    
         // The list of radio buttons refrencing the regimen.
         var REGIMEN_RADIOS = [];
     
@@ -350,42 +395,61 @@
         var MAX_RANDOM;
         
         // The list of required survey IDs.
-        var REQUIRED_SURVEY_IDS_EFFECTIVENESS = 
-            [
-                'promisFourItemPainInterferenceShortForm',
-                'promisThreeItemPainIntensityShortForm',
-                'qualityOfLifeSurvey',
-                'sleepDisturbanceSurvey'
-            ];
-        var REQUIRED_SURVEY_IDS_HARM = 
-            [
-                'constipationSurvey',
-                'fatigueSurvey',
-                'nauseaSurvey',
-                'sleepinessSurvey'
-            ];
         var REQUIRED_SURVEY_IDS = 
-            [].concat(
-                REQUIRED_SURVEY_IDS_EFFECTIVENESS,
-                REQUIRED_SURVEY_IDS_HARM);
+            [
+                'peg',
+                'sleepDisturbanceSurvey',
+                'fatigueSurvey',
+                'drowsinessSurvey',
+                'constipationSurvey'
+            ];
+        var SURVEY_IDS_COGNATIVE_FUNCTION = 
+            [
+                'cognativeFunctionSlowThinkingSurvey',
+                'cognativeFunctionFoggyThinkingSurvey',
+                'cognativeFunctionTroubleConcentratingSurvey',
+                'cognativeFunctionWorkingHarderSurvey'
+            ];
+        var SURVEY_ID_NEUROPATHIC_PAIN = 'neuropathicPainSurvey';
         // The list of optional survey ID elements, which should be added when
         // reading the campaign's contents.
         var OPTIONAL_SURVEY_ID_ELEMENTS = [];
+        
+        // Create a list of allowed regimen combinations. Each index in the
+        // list corresponds to the key for that choice. Each value is an array
+        // of allowed keys.
+        var ALLOWED_REGIMEN_COMBINATIONS =
+            [
+                [0,1,2,3,4,5,6,7],
+                [],
+                [0,1,2,3,4,5,6,7],
+                [],
+                [],
+                [],
+                [],
+                [0,1,2,3,4,5,6,7]
+            ];
         
         // The Trialist class' unique identifier.
         var CLASS_ID = "urn:class:Trialist";
         
         // The Trialist campaign's unique identifier.
-        var CAMPAIGN_ID = "urn:campaign:trialist:2013041100";
+        var CAMPAIGN_ID = "urn:campaign:trialist:2013041603";
         // The ID of the survey that contains all of the setup prompts.
         var SETUP_SURVEY_ID = "setup";
         // The prompt IDs from the setup survey.
-        var PROMPT_ID_REGIMEN = "regimen";
+        var PROMPT_ID_REGIMEN_A = "regimenA";
+        var PROMPT_ID_REGIMEN_B = "regimenB";
         var PROMPT_ID_START_DATE = "startDate";
         var PROMPT_ID_REGIMEN_DURATION = "regimenDuration";
         var PROMPT_ID_REGIMEN_CYCLES = "numberComparisonCycles";
         var PROMPT_ID_RANDOM = "random";
-        var PROMPT_ID_PRIMARY_OUTCOME = "primaryOutcome";
+        var PROMPT_ID_COGNATIVE_FUNCTION = "cognativeFunction";
+        var PROMPT_ID_NEUROPATHIC_PAIN_TAKEN = "neuropathicPainTaken";
+        
+        // The list of checkboxes for each regimen.
+        var CHECKBOX_REGIMEN_A = [];
+        var CHECKBOX_REGIMEN_B = [];
 
         // Connect the help button with its functionality.
         $("#help")
@@ -672,12 +736,12 @@
                             }
                             
                             // Get a handle for all of the necessary objects.
-                            var regimen = $("#regimen");
+                            var regimenA = $("#regimenA");
+                            var regimenB = $("#regimenB");
                             var regimenDuration = $("#regimenDuration");
                             var regimenCycles = $("#regimenCycles");
                             
-                            var primaryOutcome = $("#primaryOutcome");
-                            var optionalOutcomes = $("#optionalOutcomes");
+                            var cognativeFunction = $("#cognativeFunction");
                             
                             // Get the Trialist campaign XML.
                             var xml = data['data'][currCampaignId]['xml'];
@@ -702,12 +766,11 @@
                             }
                             
                             // Populate the regimen HTML select.
-                            createRadioButtonsFromPromptProperties(
-                                    xmlObject,
-                                    setupSurvey,
-                                    PROMPT_ID_REGIMEN,
-                                    regimen,
-                                    "regimen");
+                            setupRegimenLists(
+                                    xmlObject, 
+                                    setupSurvey, 
+                                    regimenA,
+                                    regimenB)
                             
                             // Populate the duration.
                             createSelectOptionsFromPromptProperties(
@@ -734,28 +797,8 @@
                             // Create a choice for the "primary" outcome.
                             populateSelectFromSurveys(
                                 xmlObject,
-                                REQUIRED_SURVEY_IDS_EFFECTIVENESS,
-                                primaryOutcome);
-                            
-                            // Get the list of surveys and their descriptions
-                            // and add them to the outcomes.
-                            var otherSurveys = 
-                                evaluateXpath(
-                                    xmlObject,
-                                    xmlObject,
-                                    '/campaign/surveys/survey[id!="' + 
-                                        SETUP_SURVEY_ID + 
-                                        '"]');
-                            if(otherSurveys.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                                throw "Another survey is not an XML node.";
-                            }
-                            
-                            // Create the outcome check boxes from the surveys.
-                            createCheckBoxesFromSurveys(
-                                xmlObject,
-                                optionalOutcomes,
-                                otherSurveys,
-                                REQUIRED_SURVEY_IDS);
+                                SURVEY_IDS_COGNATIVE_FUNCTION,
+                                cognativeFunction);
                         }
                     }
                     else {
@@ -792,16 +835,34 @@
         }
         
         /**
-         * Finds a specific prompt in a survey and populate the given HTML div
-         * with the properties of this prompt. This prompt must be a [custom]
-         * single or multi choice prompt.
+         * Populate the two regimen checkbox groups.
          */
-        function createRadioButtonsFromPromptProperties(root, survey, promptId, div, name) {
-            // Get the properties for the given prompt in the given survey.
-            var properties = getPropertiesFromPrompt(root, survey, promptId);
+        function setupRegimenLists(root, survey, divA, divB) {
+            var properties, index;
             
-            // Using the properties, populate the HTML div.
-            populateRadioFromProperties(root, div, properties, name);
+            // Get the list of properties for regimen list A.
+            properties =
+                getPropertiesFromPrompt(root, survey, PROMPT_ID_REGIMEN_A);
+            // Populate the checkboxes for regimen list A.
+            CHECKBOX_REGIMEN_A =
+                CHECKBOX_REGIMEN_A
+                    .concat(
+                        populateCheckboxFromProperties(
+                            root, 
+                            divA, 
+                            properties));
+
+            // Get the list of properties for regimen list B.
+            properties =
+                getPropertiesFromPrompt(root, survey, PROMPT_ID_REGIMEN_B);
+            // Populate the checkboxes for regimen list B.
+            CHECKBOX_REGIMEN_B = 
+                CHECKBOX_REGIMEN_B
+                    .concat(
+                        populateCheckboxFromProperties(
+                            root, 
+                            divB,
+                            properties));
         }
         
         /**
@@ -920,6 +981,73 @@
         }
         
         /**
+         * Creates a series of checkboxes for a DIV based on the properties
+         * from a prompt.
+         * 
+         * Returns a list containing the generated checkboxes.
+         */
+        function populateCheckboxFromProperties(root, div, properties) {
+            var currProperty = null;
+            var result = [];
+            while((currProperty = properties.iterateNext()) !== null) {
+                // XPath to the key element.
+                var keyElements =
+                    evaluateXpath(
+                        root,
+                        currProperty,
+                        './key');
+                if(keyElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                    throw "The property key is not an HTML object.";
+                }
+                
+                // Get the key element.
+                var keyElement = keyElements.iterateNext();
+                if(keyElement === null) {
+                    throw "The property is missing its key.";
+                }
+                
+                // Get the key value.
+                var key = keyElement.textContent;
+                
+                // XPath to the label element.
+                var labelElements =
+                    evaluateXpath(
+                        root,
+                        currProperty,
+                        './label');
+                if(labelElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                    throw "The property key is not an HTML object: " + key;
+                }
+                
+                // Get the label element.
+                var labelElement = labelElements.iterateNext();
+                if(labelElement === null) {
+                    throw "The property is missing its label: " + key;
+                }
+                
+                // Get the label value.
+                var label = labelElement.textContent;
+                
+                // Create the checkbox.
+                var checkbox = $('<input type="checkbox" value="' + key + '">');
+                
+                // Save the checkbox.
+                result.push(checkbox);
+                
+                // Build the entire checkbox option.
+                var entireOption =
+                    $('<label class="checkbox"></label>')
+                        .append(checkbox)
+                        .append('<span class="">' + label + '</span>');
+                
+                // Add the entire option to the div.
+                div.append(entireOption);
+            }
+            
+            return result;
+        }
+        
+        /**
          * Populates a HTML select tag with the given surveys' title and
          * description.
          */
@@ -988,177 +1116,13 @@
                         '<option value="' + 
                             surveyId + 
                             '">' + 
-                                title + 
-                                ((description === null) ? 
-                                    '' : ' (' + description + ')') +
+                                title +
                         '</option>');
             }
             
             // Reset the selected index to -1, so that the user must explicitly
             // choose an option.
             select.prop('selectedIndex', -1);
-        }
-        
-        /**
-         * Populates a HTML div tag with the given single choice prompt
-         * properties as radio buttons.
-         */
-        function populateRadioFromProperties(root, div, properties, name) {
-            var currProperty = null;
-            while((currProperty = properties.iterateNext()) !== null) {
-                // XPath to the key element.
-                var keyElements =
-                    evaluateXpath(
-                        root,
-                        currProperty,
-                        './key');
-                if(keyElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The property key is not an HTML object.";
-                }
-                
-                // Get the key element.
-                var keyElement = keyElements.iterateNext();
-                if(keyElement === null) {
-                    throw "The property is missing its key.";
-                }
-                
-                // Get the key value.
-                var key = keyElement.textContent;
-                
-                // XPath to the label element.
-                var labelElements =
-                    evaluateXpath(
-                        root,
-                        currProperty,
-                        './label');
-                if(labelElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The property key is not an HTML object: " + key;
-                }
-                
-                // Get the label element.
-                var labelElement = labelElements.iterateNext();
-                if(labelElement === null) {
-                    throw "The property is missing its label: " + key;
-                }
-                
-                // Get the label value.
-                var label = labelElement.textContent;
-                
-                // Create the radio.
-                var radio = 
-                    $('<input ' +
-                          'type="radio" ' +
-                          'name="' + name + '" ' +
-                          'value="' + key + '">' +
-                              label +
-                      '</input>');
-                
-                // Add the radio to the list of regimens.
-                REGIMEN_RADIOS.push(radio);
-                
-                // Build the entire checkbox option.
-                var entireOption =
-                    $('<label class="radio"></label>')
-                        .append(radio);
-                
-                // Add the entire option to the div.
-                div.append(entireOption);
-            }
-        }
-        
-        /**
-         * Populates a HTML select tag with the given single choice prompt
-         * properties.
-         */
-        function createCheckBoxesFromSurveys(root, div, surveys, ignoredIds, elements) {
-            var currSurvey = null;
-            
-            if((typeof ignoredIds === "undefined") || (ignoredIds === null)) {
-                ignoredIds = [];
-            }
-            
-            while((currSurvey = surveys.iterateNext()) !== null) {
-                // XPath to the ID element.
-                var idElements =
-                    evaluateXpath(
-                        root,
-                        currSurvey,
-                        './id');
-                if(idElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The ID is not an HTML object.";
-                }
-                
-                // Get the ID element.
-                var idElement = idElements.iterateNext();
-                if(idElement === null) {
-                    throw "The survey is missing its ID.";
-                }
-                
-                // Get the ID value.
-                var id = idElement.textContent;
-                
-                // If the ID is in the list of IDs to ignore, skip it.
-                if(ignoredIds.indexOf(id) >= 0) {
-                    continue;
-                }
-                
-                // XPath to the name element.
-                var titleElements =
-                    evaluateXpath(
-                        root,
-                        currSurvey,
-                        './title');
-                if(titleElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The title is not an HTML object.";
-                }
-                
-                // Get the name element.
-                var titleElement = titleElements.iterateNext();
-                if(titleElement === null) {
-                    throw "The survey is missing its title.";
-                }
-                
-                // Get the name value.
-                var title = titleElement.textContent;
-                
-                // XPath to the description element.
-                var descriptionElements =
-                    evaluateXpath(
-                        root,
-                        currSurvey,
-                        './description');
-                if(descriptionElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The description is not an HTML object: " + title;
-                }
-                
-                // Get the description element if given; otherwise, set the 
-                // description to null.
-                var description = null;
-                var descriptionElement = descriptionElements.iterateNext();
-                if(descriptionElement !== null) {
-                    description = descriptionElement.textContent;
-                }
-                
-                // Create the checkbox.
-                var checkbox = $('<input type="checkbox" value="' + id + '">');
-                
-                // Add the checkbox to the list of optional elements.
-                OPTIONAL_SURVEY_ID_ELEMENTS.push(checkbox);
-                
-                // Build the entire checkbox option.
-                var entireOption =
-                    $('<label class="checkbox"></label>')
-                        .append(checkbox)
-                        .append(
-                            '<span class="">' + 
-                                title + 
-                                ((description === null) ? 
-                                        '' : ' (' + description + ')') +
-                            '</span>');
-                
-                // Add the entire option to the div.
-                div.append(entireOption);
-            }
         }
         
         /**
@@ -1257,22 +1221,100 @@
                     username = selectUserElement.val();
                 }
                 
-                // Cycle through the regimens, find the one that is checked,
-                // and set is value as the regimen value.
-                var regimen = null;
-                for(var i = 0; i < REGIMEN_RADIOS.length; i++) {
+                // Cycle through the first regimens, find the ones that are
+                // checked, and save them.
+                var regimenAs = [];
+                for(var i = 0; i < CHECKBOX_REGIMEN_A.length; i++) {
                     // Get the current regimen radio.
-                    var regimenRadio = REGIMEN_RADIOS[i];
+                    var regimenRadio = CHECKBOX_REGIMEN_A[i];
                     
                     // If it is checked, set it as the regimen response value. 
                     if(regimenRadio.is(":checked")) { 
-                        regimen = regimenRadio.val();
+                        regimenAs.push(regimenRadio.val());
                     }
                 }
-                if(regimen === null) {
+                // If none were selected, alert the user.
+                if(regimenAs.length === 0) {
                     alertUser(
-                        "No Regimen Selected",
-                        "Please choose a regimen.");
+                        "No First Regimen Selected",
+                        "Please choose a first regimen.");
+                    return;
+                }
+                // Guarantee that no illegal association was made.
+                for(var regimenAIndex in regimenAs) {
+                    // Get the allowed values for the currently selected
+                    // regimen.
+                    var allowedValues =
+                        ALLOWED_REGIMEN_COMBINATIONS[regimenAs[regimenAIndex]];
+                    
+                    // Cycle through the other regimens to be sure they are in
+                    // the list.
+                    var i = regimenAIndex + 1;
+                    while(i < regimenAs.length) {
+                        // Verify that it is in the list.
+                        if(allowedValues.indexOf(regimenAs[i]) === -1) {
+                            alertUser(
+                                "Illegal Regimen Combination",
+                                "In the first regimen section, multiple " + 
+                                    "regimens were combined that were not " + 
+                                    "allowed to be combined.");
+                            return;
+                        }
+                        
+                        // Step.
+                        i = i + 1;
+                    }
+                }
+                
+                // Cycle through the second regimens, find the ones that are
+                // checked, and save them.
+                var regimenBs = [];
+                for(var i = 0; i < CHECKBOX_REGIMEN_B.length; i++) {
+                    // Get the current regimen radio.
+                    var regimenRadio = CHECKBOX_REGIMEN_B[i];
+                    
+                    // If it is checked, set it as the regimen response value. 
+                    if(regimenRadio.is(":checked")) { 
+                        regimenBs.push(regimenRadio.val());
+                    }
+                }
+                if(regimenBs.length === 0) {
+                    alertUser(
+                        "No Second Regimen Selected",
+                        "Please choose a second regimen.");
+                    return;
+                }
+                // Guarantee that no illegal association was made.
+                for(var regimenBIndex in regimenBs) {
+                    // Get the allowed values for the currently selected
+                    // regimen.
+                    var allowedValues =
+                        ALLOWED_REGIMEN_COMBINATIONS[regimenBs[regimenBIndex]];
+                    
+                    // Cycle through the other regimens to be sure they are in
+                    // the list.
+                    var i = regimenBIndex + 1;
+                    while(i < regimenBs.length) {
+                        // Verify that it is in the list.
+                        if(allowedValues.indexOf(regimenBs[i]) === -1) {
+                            alertUser(
+                                "Illegal Regimen Combination",
+                                "In the second regimen section, multiple " + 
+                                    "regimens were combined that were not " + 
+                                    "allowed to be combined.");
+                            return;
+                        }
+                        
+                        // Step.
+                        i = i + 1;
+                    }
+                }
+                
+                // Make sure the two regimens are not equal.
+                if(regimenAs.equivalent(regimenBs)) {
+                    alertUser(
+                        "Equivalent Regimens",
+                        "The first and second regimen lists are the same.");
                     return;
                 }
                 
@@ -1309,12 +1351,31 @@
                     Math.floor(Math.random() * 1000 * MAX_RANDOM) % MAX_RANDOM;
                 
                 // Get the primary outcome text.
-                var primaryOutcome = $("#primaryOutcome").val();
-                if(primaryOutcome === null) {
+                var cognativeFunction = $("#cognativeFunction").val();
+                if(cognativeFunction === null) {
                     alertUser(
-                        "No Primary Outcome Selected",
-                        "Please choose a primary outcome.");
+                        "No Cognative Function Selected",
+                        "Please choose a cognative function.");
                     return;
+                }
+                
+                // Get the list of required survey IDs.
+                var surveyIds = REQUIRED_SURVEY_IDS.slice();
+                // Ensure that a cognative function was selected.
+                var cognativeFunction = $("#cognativeFunction").val();
+                if((cognativeFunction === null) || (cognativeFunction === "")) {
+                    alertUser(
+                        "No Cognative Function",
+                        "Please choose a cognative function.");
+                    return;
+                }
+                surveyIds.push(cognativeFunction);
+                // If it is checked, set the flag and add it to the list of
+                // survey IDs.
+                var isNeuropathicPain = 0;
+                if($(neuropathicPain).is(":checked")) {
+                    isNeuropathicPain = 1;
+                    surveyIds.push(SURVEY_ID_NEUROPATHIC_PAIN);
                 }
                 
                 // Build the survey response.
@@ -1331,8 +1392,12 @@
                         },
                         "responses" : [
                             {
-                                "prompt_id" : PROMPT_ID_REGIMEN,
-                                "value" : regimen
+                                "prompt_id" : PROMPT_ID_REGIMEN_A,
+                                "value" : regimenAs
+                            },
+                            {
+                                "prompt_id" : PROMPT_ID_REGIMEN_B,
+                                "value" : regimenBs
                             },
                             {
                                 "prompt_id" : PROMPT_ID_START_DATE,
@@ -1351,28 +1416,18 @@
                                 "value" : regimenRandom
                             },
                             {
-                                "prompt_id" : PROMPT_ID_PRIMARY_OUTCOME,
-                                "value" : primaryOutcome
+                                "prompt_id" : PROMPT_ID_COGNATIVE_FUNCTION,
+                                "value" : cognativeFunction
+                            },
+                            {
+                                "prompt_id" : PROMPT_ID_NEUROPATHIC_PAIN_TAKEN,
+                                "value" : isNeuropathicPain
                             }
                         ]
                 };
                 
                 // The survey responses must be an array.
                 var surveyResponses = [surveyResponse];
-                
-                // Get the list of outcomes, which is the default outcomes plus
-                // the selected optional outcomes.
-                var surveyIds = REQUIRED_SURVEY_IDS.slice();
-                for(var i = 0; i < OPTIONAL_SURVEY_ID_ELEMENTS.length; i++) {
-                    // Get the current survey ID element.
-                    var optionalSurveyIdElement = 
-                        OPTIONAL_SURVEY_ID_ELEMENTS[i];
-                    
-                    // If it is checked, add it to the list of survey IDs.
-                    if(optionalSurveyIdElement.is(":checked")) { 
-                        surveyIds.push(optionalSurveyIdElement.val());
-                    }
-                }
                 
                 // Create the failure function.
                 var failure = function() {
