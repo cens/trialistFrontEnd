@@ -531,6 +531,12 @@
                 opacity: 0.7
             }
         );
+        
+        // Setup the date picker.
+        $('#startDatePicker').datepicker();
+        $('#startDatePicker').change(updateCycles);
+        
+        // Setup the regimen duration.
         $("#regimenDuration")
         .tooltip(
             {
@@ -540,9 +546,7 @@
                 opacity: 0.7
             }
         );
-        
-        // Setup the date picker.
-        $('#startDatePicker').datepicker();
+        $('#regimenDuration').change(updateCycles);
         
         // Populate the page's UI elements.
         try {
@@ -640,6 +644,54 @@
             $("#alertHeader").text(header);
             $("#alertInfo").text(info);
             $("#alertModal").modal('show');
+        }
+        
+        function updateCycles() {
+            // Get the start date.
+            var startDateValue = $('#startDate').val();
+            // If it hasn't been selected, bail out.
+            if((startDateValue === null) || (startDateValue === '')) {
+                return;
+            }
+            var startDate = new Date(Date.parse(startDateValue));
+            
+            // Get the duration.
+            var durationValue = $('#regimenDuration').val();
+            // If it hasn't been selected, bail out.
+            if((durationValue === null) || (durationValue === '')) {
+                return;
+            }
+            // Get the duration.
+            var duration = $('#regimenDuration option:selected').data("value");
+            
+            // If nothing was selected, we will want to reset it after we
+            // update the options.
+            var currChoice = $("#regimenCycles").val();
+            var notSelected = (currChoice === null) || (currChoice === '');
+            
+            // Cycle through the number of cycles.
+            $("#regimenCycles option").each(function() {
+                // Get the current date.
+                var currItem = $(this);
+                
+                // Get the number of iterations based on this field.
+                var iterations = currItem.text().split(" ")[0];
+                // Compute the total number of days.
+                var numDays = duration * iterations * 2;
+                
+                // Generate the end date.
+                var endDate = new Date();
+                endDate.setDate(startDate.getDate() + numDays);
+                
+                // Update this component.
+                currItem
+                    .text(iterations + " (" + endDate.toDateString() + ")");
+            });
+            
+            // Reset the choice if it was nothing.
+            if(notSelected) {
+                $("#regimenCycles").prop('selectedIndex', -1);
+            }
         }
         
         /**
@@ -926,6 +978,7 @@
          */
         function populateSelectFromProperties(root, select, properties) {
             var currProperty = null;
+            var result = [];
             while((currProperty = properties.iterateNext()) !== null) {
                 // XPath to the key element.
                 var keyElements =
@@ -965,19 +1018,42 @@
                 // Get the label value.
                 var label = labelElement.textContent;
                 
+                // XPath to the value element.
+                var value = null;
+                var valueElements =
+                    evaluateXpath(
+                        root,
+                        currProperty,
+                        './value');
+                if(valueElements.resultType === XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
+                    // Get the label element.
+                    var valueElement = valueElements.iterateNext();
+                    // If it exists, set it.
+                    if(valueElement !== null) {
+                        value = valueElement.textContent;
+                    }
+                }
+                
+                // Create the checkbox.
+                var checkbox = 
+                    $('<option value="' + 
+                        key + 
+                        ((value === null) ?
+                            '' :
+                            ('" data-value="' + value)) +
+                        '">' + 
+                        label + 
+                    '</option>');
+                
                 // Add the value to the select's choices.
-                select
-                    .append(
-                        '<option value="' + 
-                            key + 
-                            '">' + 
-                            label + 
-                        '</option>');
+                select.append(checkbox);
             }
             
             // Reset the selected index to -1, so that the user must explicitly
             // choose an option.
             select.prop('selectedIndex', -1);
+            
+            return result;
         }
         
         /**
