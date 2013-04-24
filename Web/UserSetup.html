@@ -424,14 +424,14 @@
         // of allowed keys.
         var ALLOWED_REGIMEN_COMBINATIONS =
             [
-                [0,1,2,3,4,5,6,7],
-                [],
-                [0,1,2,3,4,5,6,7],
-                [],
-                [],
-                [],
-                [],
-                [0,1,2,3,4,5,6,7]
+                ["1","2","3","4","5","6","7"],
+                ["0","2","4","7"],
+                ["0","1","2","3","4","5","6","7"],
+                ["0","2","7"],
+                ["0","1","2","7"],
+                ["0","2","7"],
+                ["0","2","7"],
+                ["0","1","2","3","4","5","6"]
             ];
         
         // The Trialist class' unique identifier.
@@ -1329,15 +1329,16 @@
                     return;
                 }
                 // Guarantee that no illegal association was made.
-                for(var regimenAIndex in regimenAs) {
+                var index = 0;
+                while(index < regimenAs.length) {
                     // Get the allowed values for the currently selected
                     // regimen.
                     var allowedValues =
-                        ALLOWED_REGIMEN_COMBINATIONS[regimenAs[regimenAIndex]];
+                        ALLOWED_REGIMEN_COMBINATIONS[regimenAs[index]];
                     
                     // Cycle through the other regimens to be sure they are in
                     // the list.
-                    var i = regimenAIndex + 1;
+                    var i = index + 1;
                     while(i < regimenAs.length) {
                         // Verify that it is in the list.
                         if(allowedValues.indexOf(regimenAs[i]) === -1) {
@@ -1352,6 +1353,9 @@
                         // Step.
                         i = i + 1;
                     }
+                    
+                    // Step the index.
+                    index = index + 1;
                 }
                 
                 // Cycle through the second regimens, find the ones that are
