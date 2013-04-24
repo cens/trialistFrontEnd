@@ -10,6 +10,10 @@
     <!-- The title at the top of the page. -->
     <title>Trialist Setup</title>
     
+    <!-- JSON because IE<8 -->
+    <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.min.js">
+    </script>
+    
     <!-- jQuery stuff -->
     <script src="js/jquery-1.9.0.min.js"></script>
     
@@ -602,6 +606,49 @@
         }
         
         /**
+         * Returns the next element from a list of elements.
+         */
+        function nextElement(node) {
+            if(window.DOMParser) {
+                return node.iterateNext();
+            }
+            else {
+                return node.nextNode();
+            }
+        }
+        
+        /**
+         * Returns the text for the node.
+         */
+        function elementValue(node) {
+            if(window.DOMParser) {
+                return node.textContent;
+            }
+            else {
+                return node.text;
+            }
+        }
+        
+        /**
+         * Because IE8 won't even bother with ISO 8601. Microsoft, what is your
+         * problem!?
+         */
+        function parseISO8601(dateStringInRange) {
+            var isoExp = /^\s*(\d{4})-(\d\d)-(\d\d)\s*$/,
+                date = new Date(NaN), month,
+                parts = isoExp.exec(dateStringInRange);
+
+            if(parts) {
+              month = +parts[2];
+              date.setFullYear(parts[1], month - 1, parts[3]);
+              if(month != date.getMonth() + 1) {
+                date.setTime(NaN);
+              }
+            }
+            return date;
+        }
+        
+        /**
          * randomUUID.js - Version 1.0
          *
          * Copyright 2008, Robert Kieffer
@@ -629,7 +676,7 @@
              s[19] = (s[19] & 0x3) | 0x8;  // Specify 2 high bits of clock sequence
 
              // Convert to hex chars
-             for (var i = 0; i <36; i++) s[i] = itoh[s[i]];
+             for (var i = 0; i <36; i++) s[i] = itoh.charAt(s[i]);
              
              // Insert '-'s
              s[8] = s[13] = s[18] = s[23] = '-';
@@ -646,6 +693,9 @@
             $("#alertModal").modal('show');
         }
         
+        /**
+         * Updates the number of cycles by adding dates to the values.
+         */
         function updateCycles() {
             // Get the start date.
             var startDateValue = $('#startDate').val();
@@ -653,7 +703,7 @@
             if((startDateValue === null) || (startDateValue === '')) {
                 return;
             }
-            var startDate = new Date(Date.parse(startDateValue));
+            var startDate = parseISO8601(startDateValue);
             
             // Get the duration.
             var durationValue = $('#regimenDuration').val();
@@ -807,12 +857,9 @@
                                     '/campaign/surveys/survey[id="' + 
                                         SETUP_SURVEY_ID + 
                                         '"]');
-                            if(setupSurveys.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                                throw "The setup survey is not an XML node.";
-                            }
                             
                             // Get the single configuration survey.
-                            var setupSurvey = setupSurveys.iterateNext();
+                            var setupSurvey = nextElement(setupSurveys);
                             if(setupSurvey === null) {
                                 throw "The setup survey is missing.";
                             }
@@ -948,12 +995,9 @@
                     root,
                     survey,
                     './/prompt[id="' + promptId + '"]');
-            if(prompts.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                throw "The " + promptId + " prompt is not an XML node.";
-            }
             
             // Get the singular prompt element.
-            var prompt = prompts.iterateNext();
+            var prompt = nextElement(prompts);
             if(prompt === null) {
                 throw "The " + promptId + " prompt is missing.";
             }
@@ -964,9 +1008,6 @@
                     root,
                     prompt,
                     './/property');
-            if(properties.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                throw "The properties for " + promptId + " are not XML nodes.";
-            }
             
             // Return the list of properties.
             return properties;
@@ -979,25 +1020,22 @@
         function populateSelectFromProperties(root, select, properties) {
             var currProperty = null;
             var result = [];
-            while((currProperty = properties.iterateNext()) !== null) {
+            while((currProperty = nextElement(properties)) !== null) {
                 // XPath to the key element.
                 var keyElements =
                     evaluateXpath(
                         root,
                         currProperty,
                         './key');
-                if(keyElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The property key is not an HTML object.";
-                }
                 
                 // Get the key element.
-                var keyElement = keyElements.iterateNext();
+                var keyElement = nextElement(keyElements);
                 if(keyElement === null) {
                     throw "The property is missing its key.";
                 }
                 
                 // Get the key value.
-                var key = keyElement.textContent;
+                var key = elementValue(keyElement);
                 
                 // XPath to the label element.
                 var labelElements =
@@ -1005,18 +1043,15 @@
                         root,
                         currProperty,
                         './label');
-                if(labelElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The property key is not an HTML object: " + key;
-                }
                 
                 // Get the label element.
-                var labelElement = labelElements.iterateNext();
+                var labelElement = nextElement(labelElements);
                 if(labelElement === null) {
                     throw "The property is missing its label: " + key;
                 }
                 
                 // Get the label value.
-                var label = labelElement.textContent;
+                var label = elementValue(labelElement);
                 
                 // XPath to the value element.
                 var value = null;
@@ -1025,13 +1060,11 @@
                         root,
                         currProperty,
                         './value');
-                if(valueElements.resultType === XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    // Get the label element.
-                    var valueElement = valueElements.iterateNext();
-                    // If it exists, set it.
-                    if(valueElement !== null) {
-                        value = valueElement.textContent;
-                    }
+                // Get the label element.
+                var valueElement = nextElement(valueElements);
+                // If it exists, set it.
+                if(valueElement !== null) {
+                    value = elementValue(valueElement);
                 }
                 
                 // Create the checkbox.
@@ -1065,25 +1098,22 @@
         function populateCheckboxFromProperties(root, div, properties) {
             var currProperty = null;
             var result = [];
-            while((currProperty = properties.iterateNext()) !== null) {
+            while((currProperty = nextElement(properties)) !== null) {
                 // XPath to the key element.
                 var keyElements =
                     evaluateXpath(
                         root,
                         currProperty,
                         './key');
-                if(keyElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The property key is not an HTML object.";
-                }
                 
                 // Get the key element.
-                var keyElement = keyElements.iterateNext();
+                var keyElement = nextElement(keyElements);
                 if(keyElement === null) {
                     throw "The property is missing its key.";
                 }
                 
                 // Get the key value.
-                var key = keyElement.textContent;
+                var key = elementValue(keyElement);
                 
                 // XPath to the label element.
                 var labelElements =
@@ -1091,18 +1121,15 @@
                         root,
                         currProperty,
                         './label');
-                if(labelElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The property key is not an HTML object: " + key;
-                }
                 
                 // Get the label element.
-                var labelElement = labelElements.iterateNext();
+                var labelElement = nextElement(labelElements);
                 if(labelElement === null) {
                     throw "The property is missing its label: " + key;
                 }
                 
                 // Get the label value.
-                var label = labelElement.textContent;
+                var label = elementValue(labelElement);
                 
                 // Create the checkbox.
                 var checkbox = $('<input type="checkbox" value="' + key + '">');
@@ -1139,12 +1166,9 @@
                         root,
                         root,
                         '/campaign/surveys/survey[id="' + surveyId + '"]');
-                if(surveyNodes.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The survey is not an HTML object: " + surveyId;
-                }
 
                 // Get the survey XML nodes.
-                var currSurvey = surveyNodes.iterateNext();
+                var currSurvey = nextElement(surveyNodes);
                 if(currSurvey === null) {
                     throw "The survey does not exist: " + surveyId;
                 }
@@ -1155,18 +1179,15 @@
                         root,
                         currSurvey,
                         './title');
-                if(titleElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The title is not an HTML object.";
-                }
                 
                 // Get the name element.
-                var titleElement = titleElements.iterateNext();
+                var titleElement = nextElement(titleElements);
                 if(titleElement === null) {
                     throw "The survey is missing its title.";
                 }
                 
                 // Get the name value.
-                var title = titleElement.textContent;
+                var title = elementValue(titleElement);
                 
                 // XPath to the description element.
                 var descriptionElements =
@@ -1174,16 +1195,13 @@
                         root,
                         currSurvey,
                         './description');
-                if(descriptionElements.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                    throw "The description is not an HTML object: " + title;
-                }
                 
                 // Get the description element if given; otherwise, set the 
                 // description to null.
                 var description = null;
-                var descriptionElement = descriptionElements.iterateNext();
+                var descriptionElement = nextElement(descriptionElements);
                 if(descriptionElement !== null) {
-                    description = descriptionElement.textContent;
+                    description = elementValue(descriptionElement);
                 }
                 
                 // Add the value to the select's choices.
@@ -1213,12 +1231,9 @@
                     root,
                     survey,
                     './/prompt[id="' + promptId + '"]');
-            if(prompts.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                throw "The " + promptId + " prompt is not an XML node.";
-            }
             
             // Get the singular prompt element.
-            var prompt = prompts.iterateNext();
+            var prompt = nextElement(prompts);
             if(prompt === null) {
                 throw "The " + promptId + " prompt is missing.";
             }
@@ -1229,13 +1244,10 @@
                     root,
                     prompt,
                     './/property');
-            if(properties.resultType !== XPathResult.UNORDERED_NODE_ITERATOR_TYPE) {
-                throw "The properties for " + promptId + " are not XML nodes.";
-            }
             
             // Set the count to 0.
             var count = 0;
-            while(properties.iterateNext()) {
+            while(nextElement(properties)) {
                 count++;
             }
             
@@ -1449,7 +1461,7 @@
                 // If it is checked, set the flag and add it to the list of
                 // survey IDs.
                 var isNeuropathicPain = 0;
-                if($(neuropathicPain).is(":checked")) {
+                if($("#neuropathicPain").is(":checked")) {
                     isNeuropathicPain = 1;
                     surveyIds.push(SURVEY_ID_NEUROPATHIC_PAIN);
                 }
