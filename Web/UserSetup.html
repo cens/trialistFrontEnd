@@ -1377,15 +1377,16 @@
                     return;
                 }
                 // Guarantee that no illegal association was made.
-                for(var regimenBIndex in regimenBs) {
+                index = 0;
+                while(index < regimenBs.length) {
                     // Get the allowed values for the currently selected
                     // regimen.
                     var allowedValues =
-                        ALLOWED_REGIMEN_COMBINATIONS[regimenBs[regimenBIndex]];
+                        ALLOWED_REGIMEN_COMBINATIONS[regimenBs[index]];
                     
                     // Cycle through the other regimens to be sure they are in
                     // the list.
-                    var i = regimenBIndex + 1;
+                    var i = index + 1;
                     while(i < regimenBs.length) {
                         // Verify that it is in the list.
                         if(allowedValues.indexOf(regimenBs[i]) === -1) {
@@ -1400,6 +1401,9 @@
                         // Step.
                         i = i + 1;
                     }
+                    
+                    // Step the index.
+                    index = index + 1;
                 }
                 
                 // Make sure the two regimens are not equal.
