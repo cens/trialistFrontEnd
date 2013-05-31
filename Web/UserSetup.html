@@ -1285,7 +1285,7 @@
 									// Verify that it is in the list.
 									if (allowedValues.indexOf(regimenAs[i]) === -1) {
 										alertUser(
-												"Illegal Regimen Combination",
+												"Not Medically Indicated Regimen Combination",
 												"In the first regimen section, multiple "
 														+ "regimens were combined that were not "
 														+ "allowed to be combined.");
@@ -1387,8 +1387,8 @@
 							var cognativeFunction = $("#cognativeFunction")
 									.val();
 							if (cognativeFunction === null) {
-								alertUser("No Cognative Function Selected",
-										"Please choose a cognative function.");
+								alertUser("No Cognitive Function Outcome Selected",
+										"Please choose a cognitive function outcome.");
 								return;
 							}
 
@@ -1399,8 +1399,8 @@
 									.val();
 							if ((cognativeFunction === null)
 									|| (cognativeFunction === "")) {
-								alertUser("No Cognative Function",
-										"Please choose a cognative function.");
+								alertUser("No Cognitive Outcome Function Selected",
+										"Please choose a cognitive function outcome.");
 								return;
 							}
 							surveyIds.push(cognativeFunction);
@@ -1472,7 +1472,7 @@
 								// Check that we indicated success.
 								if (data['result'] === "success") {
 									alertUser("Success",
-											"The user was successfully setup.");
+											"The phone app for Trialist is ready to go! Welcome to the PREEMPT study.");
 								} else {
 									var failureObject = data['errors'][0];
 									if (failureObject['code'] === "0200") {
