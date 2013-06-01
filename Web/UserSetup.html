@@ -274,29 +274,10 @@
 				<div class="well" style="margin: 0px;">
 					<form class="form-horizontal" action="#">
 						<div class="control-group">
-							<label class="control-label">Username:</label>
+							<label class="control-label">Patient's Login:</label>
 							<div class="controls">
 								<select id="selectUser">
-									<option value="New User" selected="selected">New
-										Patient</option>
-								</select> <input id="inputNewUserUsername" class="textinput" type="text"
-									placeholder="New Username"
-									title="Must be at least 8 characters.">
-							</div>
-						</div>
-					</form>
-					<form class="form-horizontal" action="#">
-						<div id="divNewUserPassword" class="control-group">
-							<label class="control-label">Password:</label>
-							<div class="control-group">
-								<div class="controls">
-									<input id="inputNewUserPassword" class="textinput"
-										type="password" placeholder="New User Password"
-										title="Must be at least 4 characters."> <input
-										id="inputNewUserPasswordRetype" class="textinput"
-										type="password" placeholder="Retype Password"
-										title="Must be at least 4 characters.">
-								</div>
+								</select> 
 							</div>
 						</div>
 					</form>
@@ -357,7 +338,7 @@
 				<div class="light-blue row-fluid" style="margin-bottom: 0px;">
 					<form class="form-horizontal" action="#">
 						<h4 class="heading" style="padding-left: 10px; color: white;">
-							Extra Outcomes to Track
+							Elective Outcomes
 						</h4>
 					</form>
 				</div>
@@ -366,7 +347,7 @@
 						<div class="control-group">
 							<label class="control-label">Cognitive Function:</label>
 							<div class="controls">
-								<select id="cognativeFunction" style="width: 100%;">
+								<select id="cognitiveFunction" style="width: 100%;">
 								</select>
 							</div>
 						</div>
@@ -452,11 +433,11 @@
 					var REQUIRED_SURVEY_IDS = [ 'peg',
 							'sleepDisturbanceSurvey', 'fatigueSurvey',
 							'drowsinessSurvey', 'constipationSurvey' ];
-					var SURVEY_IDS_COGNATIVE_FUNCTION = [
-							'cognativeFunctionSlowThinkingSurvey',
-							'cognativeFunctionFoggyThinkingSurvey',
-							'cognativeFunctionTroubleConcentratingSurvey',
-							'cognativeFunctionWorkingHarderSurvey' ];
+					var SURVEY_IDS_COGNITIVE_FUNCTION = [
+							'cognitiveFunctionSlowThinkingSurvey',
+							'cognitiveFunctionFoggyThinkingSurvey',
+							'cognitiveFunctionTroubleConcentratingSurvey',
+							'cognitiveFunctionWorkingHarderSurvey' ];
 					var SURVEY_ID_NEUROPATHIC_PAIN = 'neuropathicPainSurvey';
 					// The list of optional survey ID elements, which should be added when
 					// reading the campaign's contents.
@@ -477,7 +458,7 @@
 					var CLASS_ID = "urn:class:Trialist";
 
 					// The Trialist campaign's unique identifier.
-					var CAMPAIGN_ID = "urn:campaign:trialist:2013041603";
+					var CAMPAIGN_ID = "urn:campaign:trialist";
 					// The ID of the survey that contains all of the setup prompts.
 					var SETUP_SURVEY_ID = "setup";
 					// The prompt IDs from the setup survey.
@@ -487,7 +468,7 @@
 					var PROMPT_ID_REGIMEN_DURATION = "regimenDuration";
 					var PROMPT_ID_REGIMEN_CYCLES = "numberComparisonCycles";
 					var PROMPT_ID_RANDOM = "random";
-					var PROMPT_ID_COGNATIVE_FUNCTION = "cognativeFunction";
+					var PROMPT_ID_COGNITIVE_FUNCTION = "cognitiveFunction";
 					var PROMPT_ID_NEUROPATHIC_PAIN_TAKEN = "neuropathicPainTaken";
 
 					// The list of checkboxes for each regimen.
@@ -515,17 +496,6 @@
 						}, function() {
 							window.location = "/";
 						});
-					});
-
-					// Setup the "Select User" section.
-					$("#selectUser").change(function() {
-						if (this.selectedIndex === 0) {
-							$("#inputNewUserUsername").fadeIn(200);
-							$("#divNewUserPassword").fadeIn(200);
-						} else {
-							$("#inputNewUserUsername").fadeOut(200);
-							$("#divNewUserPassword").fadeOut(200);
-						}
 					});
 
 					// Add the tooltips to the new user input fields.
@@ -769,6 +739,9 @@
 								if (data['result'] === "success") {
 									// Connect to the list of users element in the HTML.
 									var userListElement = $("#selectUser");
+									
+									// Temporary array for sorting the user list
+									var usernames = new Array();
 
 									// Iterate over all of the classes.
 									for ( var currClassId in data['data']) {
@@ -782,11 +755,22 @@
 
 										// Iterate over all of the users in the current class.
 										for ( var user in classObject['users']) {
-											userListElement
-													.append("<option value=\"" + user + "\">"
-															+ user
-															+ "</option>");
+											usernames.push(user);
 										}
+										
+										usernames.sort();
+										
+										var length = usernames.length;
+										
+										for(var i = 0; i < length; i++) {
+											userListElement
+											  .append("<option value=\"" + usernames[i] + "\">"
+													    + usernames[i]
+													    + "</option>");
+											
+										}
+										
+										delete usernames;
 									}
 								} else {
 									var failureObject = data['errors'][0];
@@ -804,7 +788,7 @@
 							}
 						}
 
-						// Build the parameters and make the request.
+						// Build the parameters and make the class read request.
 						var authToken = getAuthToken();
 						if (authToken != null) {
 							var parameters = {
@@ -816,6 +800,92 @@
 									.fail(failure);
 						}
 					}
+					
+					/**
+					 * Edit out users that already belong to the campaign. Technically the same user could 
+					 * be set up multiple times (i.e., the server allows multiple masks), but this would 
+					 * cause problems with the trial. The trial protocol is that the user will be assigned a
+					 * new username if and only if it has been less than two days since the initial set up. 
+					 * Users who request a change after the 48 hour window won't be able to participate in the
+					 * trial. (This is something still under discussion and will possibly change in a future release.)
+					 */
+					 
+					 /* There is no way for a supervisor to query ohmage to find out what campaigns a user belongs to */
+					 
+					/*function editUsers() {
+						
+						// Build the failure function.
+                        var failure = function() {
+                            alertUser("Error Retrieving User Info",
+                                    "There was an error retrieving the user info.");
+                        }
+                        // Build the success function.
+                        var success = function(data) {
+                            try {
+                                // Check that we indicated success.
+                                if (data['result'] === "success") {
+                                    // Connect to the list of users element in the HTML.
+                                    var userListElement = $("#selectUser");
+                                    
+                                    // Temporary array for sorting the user list
+                                    var usernames = new Array();
+
+                                    // Iterate over all of the classes.
+                                    for ( var currClassId in data['data']) {
+                                        // We are only concerned with the Trialist class.
+                                        if (currClassId !== CLASS_ID) {
+                                            continue;
+                                        }
+
+                                        // Get the current class object.
+                                        var classObject = data['data'][currClassId];
+
+                                        // Iterate over all of the users in the current class.
+                                        for ( var user in classObject['users']) {
+                                            usernames.push(user);
+                                        }
+                                        
+                                        usernames.sort();
+                                        
+                                        var length = usernames.length;
+                                        
+                                        for(var i = 0; i < length; i++) {
+                                            userListElement
+                                              .append("<option value=\"" + usernames[i] + "\">"
+                                                        + usernames[i]
+                                                        + "</option>");
+                                            
+                                        }
+                                        
+                                        delete usernames;
+                                    }
+                                } else {
+                                    var failureObject = data['errors'][0];
+                                    if (failureObject['code'] === "0200") {
+                                        redirectToLogin();
+                                    } else {
+                                        throw "Error reading the data: "
+                                                + failureObject['text'];
+                                    }
+                                }
+                            } catch (e) {
+                                alertUser("Error Loading Users",
+                                        "There was an error loading the list of users: "
+                                                + e);
+                            }
+                        }
+                        
+					    // Build the parameters and make the user_info read request.
+                        var authToken = getAuthToken();
+                        if (authToken != null) {
+                            var parameters = {
+                                "client" : "TrialistWeb",
+                                "auth_token" : authToken
+                            };
+                            $.post("/app/user_info/read", parameters, success)
+                                    .fail(failure);
+                        }
+					}*/
 
 					/**
 					 * Get the campaign definition.
@@ -845,7 +915,7 @@
 										var regimenDuration = $("#regimenDuration");
 										var regimenCycles = $("#regimenCycles");
 
-										var cognativeFunction = $("#cognativeFunction");
+										var cognitiveFunction = $("#cognitiveFunction");
 
 										// Get the Trialist campaign XML.
 										var xml = data['data'][currCampaignId]['xml'];
@@ -863,7 +933,12 @@
 										if (setupSurvey === null) {
 											throw "The setup survey is missing.";
 										}
-
+										
+										// Populate the existing pain treatments select.
+										
+										
+										
+										
 										// Populate the regimen HTML select.
 										setupRegimenLists(xmlObject,
 												setupSurvey, regimenA, regimenB)
@@ -887,8 +962,8 @@
 
 										// Create a choice for the "primary" outcome.
 										populateSelectFromSurveys(xmlObject,
-												SURVEY_IDS_COGNATIVE_FUNCTION,
-												cognativeFunction);
+												SURVEY_IDS_COGNITIVE_FUNCTION,
+												cognitiveFunction);
 									}
 								} else {
 									var failureObject = data['errors'][0];
@@ -1204,54 +1279,9 @@
 					 */
 					function create() {
 						try {
-							// Create the username and passowrd variables.
-							var username, password = null;
-
+							
 							// Get the HTML element used to select the user.
-							var selectUserElement = $("#selectUser");
-
-							// If this is a new user, ensure that the two password fields
-							// match.
-							// Developer's note: Why "get(0)"? Because it works; other than
-							// that, I have no idea.
-							if (selectUserElement.get(0).selectedIndex === 0) {
-								// Get the username and password elements.
-								var usernameElement = $("#inputNewUserUsername");
-								var passwordElement = $("#inputNewUserPassword")
-
-								// Get the username and password values.
-								username = usernameElement.val();
-								password = passwordElement.val();
-
-								// If the username is null or empty, alert the user.
-								if ((username === null)
-										|| (username.length === 0)) {
-									alertUser("Missing Username",
-											"A username must be given for the new user.");
-									usernameElement.focus();
-									return;
-								}
-								// If the password is null or empty, alert the user.
-								else if ((password === null)
-										|| (password.length === 0)) {
-									alertUser("Missing Password",
-											"A password must be given for the new user.");
-									passwordElement.focus();
-									return;
-								}
-								// If the passwords don't match, alert the user.
-								if (password !== $(
-										"#inputNewUserPasswordRetype").val()) {
-									alertUser("Passwords Do Not Match",
-											"The two passwords do not match.");
-									passwordElement.focus();
-									return;
-								}
-							}
-							// Otherwise, get the user's username.
-							else {
-								username = selectUserElement.val();
-							}
+							var username = $("#selectUser").val();
 
 							// Cycle through the first regimens, find the ones that are
 							// checked, and save them.
@@ -1285,7 +1315,7 @@
 									// Verify that it is in the list.
 									if (allowedValues.indexOf(regimenAs[i]) === -1) {
 										alertUser(
-												"Not Medically Indicated Regimen Combination",
+												"Regimen Combination Not Medically Indicated ",
 												"In the first regimen section, multiple "
 														+ "regimens were combined that were not "
 														+ "allowed to be combined.");
@@ -1384,9 +1414,9 @@
 									% MAX_RANDOM;
 
 							// Get the primary outcome text.
-							var cognativeFunction = $("#cognativeFunction")
+							var cognitiveFunction = $("#cognitiveFunction")
 									.val();
-							if (cognativeFunction === null) {
+							if (cognitiveFunction === null) {
 								alertUser("No Cognitive Function Outcome Selected",
 										"Please choose a cognitive function outcome.");
 								return;
@@ -1394,16 +1424,16 @@
 
 							// Get the list of required survey IDs.
 							var surveyIds = REQUIRED_SURVEY_IDS.slice();
-							// Ensure that a cognative function was selected.
-							var cognativeFunction = $("#cognativeFunction")
+							// Ensure that a cognitive function was selected.
+							var cognitiveFunction = $("#cognitiveFunction")
 									.val();
-							if ((cognativeFunction === null)
-									|| (cognativeFunction === "")) {
+							if ((cognitiveFunction === null)
+									|| (cognitiveFunction === "")) {
 								alertUser("No Cognitive Outcome Function Selected",
 										"Please choose a cognitive function outcome.");
 								return;
 							}
-							surveyIds.push(cognativeFunction);
+							surveyIds.push(cognitiveFunction);
 							// If it is checked, set the flag and add it to the list of
 							// survey IDs.
 							var isNeuropathicPain = 0;
@@ -1450,8 +1480,8 @@
 											"value" : regimenRandom
 										},
 										{
-											"prompt_id" : PROMPT_ID_COGNATIVE_FUNCTION,
-											"value" : cognativeFunction
+											"prompt_id" : PROMPT_ID_COGNITIVE_FUNCTION,
+											"value" : cognitiveFunction
 										},
 										{
 											"prompt_id" : PROMPT_ID_NEUROPATHIC_PAIN_TAKEN,
