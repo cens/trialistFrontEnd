@@ -265,7 +265,7 @@
 					</table>
 				</div>
 
-				<div class="light-blue row-fluid" style="margin-bottom: 0px;">
+				<div class="light-grey row-fluid" style="margin-bottom: 0px;">
 					<form class="form-horizontal" action="#">
 						<h4 class="heading" style="padding-left: 10px; color: white;">
 							Patient Information</h4>
@@ -283,14 +283,27 @@
 					</form>
 				</div>
 
-				<div class="light-blue row-fluid" style="margin-bottom: 0px;">
+				<div class="light-grey row-fluid" style="margin-bottom: 0px;">
 					<form class="form-horizontal" action="#">
 						<h4 class="heading heading-shaddow" style="padding-left: 10px; color: white;">
 						  Study Protocol
 						</h4>
 					</form>
 			    </div>
+			    
+			    
 				<div class="well" style="margin: 0px;">
+
+					<div class="row" style="margin: 10px;">
+						<p> Will
+							there be any pain treatments that you will continue to use
+							throughout the trial that will not be a part of the trial? If so,
+							please speak to the research assistant. They will record the pain
+							treatments you will continue to use throughout the trial in a
+							separate form.</p>
+					</div>
+
+
 					<form class="form-horizontal" action="#">
 						<div class="control-group">
 							<label class="control-label">Regimen A:</label>
@@ -305,7 +318,7 @@
 					</form>
 					<form class="form-horizontal" action="#">
 						<div class="control-group">
-							<label class="control-label">Start Date:</label>
+							<label class="control-label">Study Start Date:</label>
 							<div class="controls">
 								<div class="input-append date datepicker" id="startDatePicker"
 									data-date-format="yyyy-mm-dd">
@@ -335,7 +348,29 @@
 					</form>
 				</div>
 
-				<div class="light-blue row-fluid" style="margin-bottom: 0px;">
+
+                <div class="light-grey row-fluid" style="margin-bottom: 0px;">
+                    <form class="form-horizontal" action="#">
+                        <h4 class="heading" style="padding-left: 10px; color: white;">
+                            Mandatory Outcomes
+                        </h4>
+                    </form>
+                </div>
+                <div class="well" style="margin: 0px;">
+                    <span>These are outcomes that will be tracked by every participant in the study.</span>
+                    <div class="container" style="padding: 10px;">
+                    <ul>
+                      <li>A daily questionnaire about pain intensity and interferences.</li>
+                      <li>A daily question about the previous night's sleep.</li>
+                      <li>A daily question about how tired-out you felt in the past day.</li>
+                      <li>A daily question about how drowsy you felt for the current day.</li>
+                      <li>A daily question about problems moving your bowels.</li>
+                    </ul>
+                </div>
+                </div>
+
+
+				<div class="light-grey row-fluid" style="margin-bottom: 0px;">
 					<form class="form-horizontal" action="#">
 						<h4 class="heading" style="padding-left: 10px; color: white;">
 							Elective Outcomes
@@ -343,26 +378,36 @@
 					</form>
 				</div>
 				<div class="well" style="margin: 0px;">
+
+                    <div style="padding: 10px;">
 					<form class="form-horizontal" action="#">
-						<div class="control-group">
-							<label class="control-label">Cognitive Function:</label>
-							<div class="controls">
+							<div class="control-group">
+							<span class="help-block" style="color: #000000;">
+							Pain medicines can sometimes affect our thinking and concentration. Please
+                            select one of the following questions about your thinking or concentration that you will want to track
+                            every day.
+                            </span>
+							<div class="controls" style=" float: left;">
 								<select id="cognitiveFunction" style="width: 100%;">
-								</select>
+								</select> 
 							</div>
 						</div>
 					</form>
+					</div>
+					
+					<div style="padding: 10px;">
 					<form class="form-horizontal" action="#">
 						<div class="control-group">
-							<label class="control-label">Neuropathic Pain:</label>
+						<label class="control-label">Neuropathic Pain:</label>
 							<div class="controls">
 								<label class="checkbox"> <input id="neuropathicPain"
-									type="checkbox"> <span class="">Include the
-										neuropathic pain surveys.</span>
+									type="checkbox"> <span>Do you have pain accompanied by burning, pins and needles, 
+									itching, or a sensitive or unpleasant sensation on the skin?</span>
 								</label>
 							</div>
 						</div>
 					</form>
+					</div>
 				</div>
 
 				<div class="row-fluid">
@@ -934,11 +979,6 @@
 											throw "The setup survey is missing.";
 										}
 										
-										// Populate the existing pain treatments select.
-										
-										
-										
-										
 										// Populate the regimen HTML select.
 										setupRegimenLists(xmlObject,
 												setupSurvey, regimenA, regimenB)
@@ -961,7 +1001,7 @@
 												setupSurvey, PROMPT_ID_RANDOM);
 
 										// Create a choice for the "primary" outcome.
-										populateSelectFromSurveys(xmlObject,
+										populateSelectFromSingleItemSurveys(xmlObject,
 												SURVEY_IDS_COGNITIVE_FUNCTION,
 												cognitiveFunction);
 									}
@@ -1186,10 +1226,9 @@
 					}
 
 					/**
-					 * Populates a HTML select tag with the given surveys' title and
-					 * description.
+					 * Populates a HTML select tag with prompt text for the given single-item surveys. 
 					 */
-					function populateSelectFromSurveys(root, surveyIds, select) {
+					function populateSelectFromSingleItemSurveys(root, surveyIds, select) {
 						// Cycles through the survey IDs.
 						for ( var i = 0; i < surveyIds.length; i++) {
 							// Get the survey ID.
@@ -1208,7 +1247,7 @@
 
 							// XPath to the name element.
 							var titleElements = evaluateXpath(root, currSurvey,
-									'./title');
+									'./contentList/prompt/promptText');
 
 							// Get the name element.
 							var titleElement = nextElement(titleElements);
@@ -1219,24 +1258,8 @@
 							// Get the name value.
 							var title = elementValue(titleElement);
 
-							// XPath to the description element.
-							var descriptionElements = evaluateXpath(root,
-									currSurvey, './description');
-
-							// Get the description element if given; otherwise, set the 
-							// description to null.
-							var description = null;
-							var descriptionElement = nextElement(descriptionElements);
-							if (descriptionElement !== null) {
-								description = elementValue(descriptionElement);
-							}
-
 							// Add the value to the select's choices.
-							select
-									.append('<option value="' + 
-                            surveyId + 
-                            '">'
-											+ title + '</option>');
+							select.append('<option value="' + surveyId + '">' + title + '</option>');
 						}
 
 						// Reset the selected index to -1, so that the user must explicitly
