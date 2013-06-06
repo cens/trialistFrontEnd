@@ -524,6 +524,7 @@
 					var PROMPT_ID_RANDOM = "random";
 					var PROMPT_ID_COGNITIVE_FUNCTION = "cognitiveFunction";
 					var PROMPT_ID_NEUROPATHIC_PAIN_TAKEN = "neuropathicPainTaken";
+					var PROMPT_ID_USER_SELECTED = "userSelected";
 
 					// The list of checkboxes for each regimen.
 					var CHECKBOX_REGIMEN_A = [];
@@ -555,7 +556,7 @@
 						});
 					});
 
-					// Add the tooltips to the new user input fields.
+/* 					// Add the tooltips to the new user input fields.
 					$("#inputNewUserUsername").tooltip({
 						position : "center right",
 						offset : [ -2, 10 ],
@@ -574,7 +575,7 @@
 						effect : "fade",
 						opacity : 0.7
 					});
-
+ */
 					// Setup the date picker.
 					$('#startDatePicker').datepicker();
 					$('#startDatePicker').change(updateCycles);
@@ -591,6 +592,7 @@
 					// Populate the page's UI elements.
 					try {
 						getUsers();
+						filterUsers();
 						getCampaignDefinition();
 					} catch (e) {
 						alertUser("Error", "An unknown error occurred: " + e);
@@ -841,7 +843,85 @@
 						}
 					}
 					
+					
+					/**
+					 * Filter out users based on previously submitted survey responses.
+					 */
+                    function filterUsers() {
+                        
+                        // Build the failure function.
+                        var failure = function() {
+                            alertUser("Server Communication Error",
+                                    "There was an error while communicating with the server.");
+                        }
+                        // Build the success function.
+                        var success = function(data) {
+	                        try {
+	                            // Check that we indicated success.
+	                            if (data['result'] === "success") {
+	                                    
+	                                    // Get the participants so users cannot be added to
+	                                    // to the study twice.
+	                                    var dataArray = data['data']; // an array of anonymous objects
+	                                    var participants = new Array(); 
+	                                    
+	                                    for(var i = 0; i < dataArray.length; i++) {
+	                                    	participants.push(dataArray[i]['responses']['userSelected']['prompt_response']);
+	                                    }
+	                                    
+	                                    var length = usernames.length;
+	                                    
+	                                    // Connect to the list of users element in the HTML.
+	                                    var userListElement = $("#selectUser");
+	                                
+	                                    for(var i = 0; i < length; i++) {
+	                                        
+	                                        if(participants.indexOf(usernames[i]) == -1) {
+	                                            userListElement
+	                                              .append("<option value=\"" + usernames[i] + "\">"
+	                                                    + usernames[i]
+	                                                    + "</option>");
+	                                        }
+	                                    }
+	                                    
+	                                    // Reset the selected index to -1, so that the user must explicitly
+	                                    // choose an option.
+	                                    userListElement.prop('selectedIndex', -1);
+	                                    
+	                            } else {
+	                               
+	                            	var failureObject = data['errors'][0];
+	                                if (failureObject['code'] === "0200") {
+	                                    redirectToLogin();
+	                                } else {
+	                                    throw "Error reading the data: "
+	                                            + failureObject['text'];
+	                                }
+	                            }
+	                        } catch (e) {
+	                            alertUser("Error Populating the Page",
+	                                    "There was an error populating the page: "
+	                                            + e.toString());
+	                        }
+                        }
 
+                        // Build the parameters and make the request.
+                        var authToken = getAuthToken();
+                        if (authToken != null) {
+                            var parameters = {
+                                "client" : "TrialistWeb",
+                                "auth_token" : authToken,
+                                "campaign_urn" : CAMPAIGN_ID,
+                                "output_format" : "json-rows",
+                                "prompt_id_list" : "userSelected",
+                                "user_list" : "urn:ohmage:special:all",
+                                "column_list" : "urn:ohmage:prompt:response"
+                            };
+                            $.post("/app/survey_response/read", parameters, success,
+                                    "json").fail(failure);
+                        }
+                    }
+					
 					/**
 					 * Get the campaign definition.
 					 */
@@ -864,26 +944,7 @@
 										if (currCampaignId !== CAMPAIGN_ID) {
 											continue;
 										}
-										
-										// Get the participants so users cannot be added to
-										// to the study twice.
-										var participants = data['data'][currCampaignId]['user_role_campaign']['participant'];
-										
-										var length = usernames.length;
-										
-										// Connect to the list of users element in the HTML.
-	                                    var userListElement = $("#selectUser");
-	                                
-                                        for(var i = 0; i < length; i++) {
-                                        	
-                                        	if(participants.indexOf(usernames[i]) == -1) {
-                                                userListElement
-                                                  .append("<option value=\"" + usernames[i] + "\">"
-                                                        + usernames[i]
-                                                        + "</option>");
-                                        	}
-                                        }
-										
+											
 										// Get a handle for all of the necessary objects.
 										var regimenA = $("#regimenA");
 										var regimenB = $("#regimenB");
@@ -1236,6 +1297,12 @@
 							// Get the HTML element used to select the user.
 							var username = $("#selectUser").val();
 
+							if (username === null) {
+                                alertUser("No Patient Login Selected",
+                                        "Please choose a patient login.");
+                                return;
+                            }
+							
 							// Cycle through the first regimens, find the ones that are
 							// checked, and save them.
 							var regimenAs = [];
@@ -1439,7 +1506,11 @@
 										{
 											"prompt_id" : PROMPT_ID_NEUROPATHIC_PAIN_TAKEN,
 											"value" : isNeuropathicPain
-										} ]
+										},
+										{
+                                            "prompt_id" : PROMPT_ID_USER_SELECTED,
+                                            "value" : username
+                                        }]
 							};
 
 							// The survey responses must be an array.
@@ -1495,10 +1566,7 @@
 									"survey_id_list" : surveyIdsString,
 									"surveys" : JSON.stringify(surveyResponses)
 								};
-								// Add the password if we are creating a new user.
-								if (password !== null) {
-									parameters['new_password'] = password;
-								}
+								
 								// Make the request.
 								$.post("/app/campaign/assign", parameters,
 										success).fail(failure);
