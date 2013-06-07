@@ -295,7 +295,8 @@
 				<div class="well" style="margin: 0px;">
 
 					<div class="row" style="margin: 10px;">
-						<p> Will
+					    
+						<p><i class="icon-arrow-right"></i> Will
 							there be any pain treatments that you will continue to use
 							throughout the trial that will not be a part of the trial? If so,
 							please speak to the research assistant. They will record the pain
@@ -338,7 +339,7 @@
 						<div class="control-group">
 							<label class="control-label">Period Length:</label>
 							<div class="controls">
-								<select id="regimenDuration" title="Time on each drug.">
+								<select id="regimenDuration" title="Time on each regimen.">
 								</select>
 							</div>
 						</div>
@@ -349,6 +350,7 @@
 							<div class="controls">
 								<select id="regimenCycles">
 								</select>
+								<span class="regimenCyclesEndDate" style="margin-left: 10px;"></span>
 							</div>
 						</div>
 					</form>
@@ -362,9 +364,11 @@
                         </h4>
                     </form>
                 </div>
+                
                 <div class="well" style="margin: 0px;">
+                
                     <span>These are outcomes that will be tracked by every participant in the study.</span>
-                    <div class="container" style="padding: 10px;">
+                    <div class="container" style="padding: 20px 20px 0px 20px;">
                     <ul>
                       <li>A daily questionnaire about pain intensity and interferences.</li>
                       <li>A daily question about the previous night's sleep.</li>
@@ -372,49 +376,48 @@
                       <li>A daily question about how drowsy you felt for the current day.</li>
                       <li>A daily question about problems moving your bowels.</li>
                     </ul>
+                   </div>
+               
+                
+                <hr />
+                
+                <div>
+	                <form class="form-horizontal" action="#">
+	                        <span class="help-block" style="color: #000000;">
+	                       Pain medicines can sometimes affect our thinking or concentration. Please select one of the 
+	                       following questions about your thinking or concentration that you will want to track every day.
+	                        </span>
+	
+	                        <div style="padding: 20px;">
+	                            <select style="width: 80%" id="cognitiveFunction">
+	                            </select>
+	                        </div>
+	                </form>
                 </div>
+
                 </div>
 
 
 				<div class="light-grey row-fluid" style="margin-bottom: 0px;">
 					<form class="form-horizontal" action="#">
 						<h4 class="heading" style="padding-left: 10px; color: white;">
-							Elective Outcomes
+							Pain Outcome
 						</h4>
 					</form>
 				</div>
 				
+				
 				<div class="well" style="padding: 10px;">
-
-                    <div>
-					<form class="form-horizontal" action="#">
-							<span class="help-block" style="color: #000000;">
-							Pain medicines can sometimes affect our thinking and concentration. Please
-                            select one of the following questions that you will want to track
-                            every day.
-                            </span>
-
-							<div class="controls"  style="padding: 20px;">
-								<select style="width: 80%" id="cognitiveFunction">
-								</select> 
-
-						</div>
-					</form>
-					</div>
-					
-					<hr/>
+                   					
 					
 					<div style="padding: 10px;">
 					<form class="form-horizontal" action="#">
-						<div class="control-group">
-						<label class="control-label">Pain Outcome:</label>
-							<div class="controls">
-								<label class="checkbox"> <input id="neuropathicPain"
-									type="checkbox"> <span>Do you have pain accompanied by burning, pins and needles, 
-									itching, or a sensitive or unpleasant sensation on the skin?</span>
-								</label>
-							</div>
-						</div>
+						
+						<label class="checkbox"> <input id="neuropathicPain"
+							type="checkbox"> <span>Please check this box if you have pain accompanied by burning, pins and needles, 
+							itching, or a sensitive or unpleasant sensation on the skin.</span>
+						</label>
+						
 					</form>
 					</div>
 				</div>
@@ -556,26 +559,6 @@
 						});
 					});
 
-/* 					// Add the tooltips to the new user input fields.
-					$("#inputNewUserUsername").tooltip({
-						position : "center right",
-						offset : [ -2, 10 ],
-						effect : "fade",
-						opacity : 0.7
-					});
-					$("#inputNewUserPassword").tooltip({
-						position : "center right",
-						offset : [ -2, 10 ],
-						effect : "fade",
-						opacity : 0.7
-					});
-					$("#inputNewUserPasswordRetype").tooltip({
-						position : "center right",
-						offset : [ -2, 10 ],
-						effect : "fade",
-						opacity : 0.7
-					});
- */
 					// Setup the date picker.
 					$('#startDatePicker').datepicker();
 					$('#startDatePicker').change(updateCycles);
@@ -588,6 +571,7 @@
 						opacity : 0.7
 					});
 					$('#regimenDuration').change(updateCycles);
+					$('#regimenCycles').change(updateCycles);
 
 					// Populate the page's UI elements.
 					try {
@@ -727,56 +711,61 @@
 						// Get the start date.
 						var startDateValue = $('#startDate').val();
 						// If it hasn't been selected, bail out.
-						if ((startDateValue === null)
-								|| (startDateValue === '')) {
+						if ((startDateValue === undefined) || (startDateValue === null) || (startDateValue === '')) {
 							return;
 						}
 						var startDate = parseISO8601(startDateValue);
-
-						// Get the duration.
-						var durationValue = $('#regimenDuration').val();
+						
+						// Get index of the duration select
+						// .text() will return the contents of the select
+						var durationIndex = $("#regimenDuration option:selected").val(); 
 						// If it hasn't been selected, bail out.
-						if ((durationValue === null) || (durationValue === '')) {
+						if ((durationIndex === undefined) || (durationIndex === null) || (durationIndex === '')) {
 							return;
 						}
-						// Get the duration.
-						var duration = $('#regimenDuration option:selected')
-								.data("value");
-
+						
 						// If nothing was selected, we will want to reset it after we
 						// update the options.
-						var currChoice = $("#regimenCycles").val();
-						var notSelected = (currChoice === null)
-								|| (currChoice === '');
-
-						// Cycle through the number of cycles.
-						$("#regimenCycles option")
-								.each(
-										function() {
-											// Get the current date.
-											var currItem = $(this);
-
-											// Get the number of iterations based on this field.
-											var iterations = currItem.text()
-													.split(" ")[0];
-											// Compute the total number of days.
-											var numDays = duration * iterations
-													* 2;
-
-											// Generate the end date.
-											var endDate = new Date();
-											endDate.setDate(startDate.getDate()
-													+ numDays);
-
-											// Update this component.
-											currItem.text(iterations + " ("
-													+ endDate.toDateString()
-													+ ")");
-										});
-
+						var regimenCyclesIndex = $("#regimenCycles option:selected").val();
+						
+						var notSelected = (regimenCyclesIndex === undefined);
+												
 						// Reset the choice if it was nothing.
 						if (notSelected) {
-							$("#regimenCycles").prop('selectedIndex', -1);
+							$("#regimenCycles").prop("selectedIndex", -1);
+							$("span.regimenCyclesEndDate").text("");
+						}
+						else {
+							
+							// NOTE: if the XML values have changed for the duration
+							// or cycles, this code will need to be updated.
+							
+							var duration = -1;
+							var regimenCycles = -1;
+							
+							if(durationIndex == 0) {
+								duration = 2; // days
+							} else if(durationIndex == 1) {
+								duration = 7;
+							} else if(durationIndex == 2) {
+								duration = 14;
+							}
+							
+						    if(regimenCyclesIndex == 0) {
+                                regimenCycles = 2; 
+                            } else if(regimenCyclesIndex == 1) {
+                            	regimenCycles = 3;
+                            } else if(regimenCyclesIndex == 2) {
+                            	regimenCycles = 4;
+                            }
+							
+						    var millis = duration * regimenCycles * 2 * 24 * 60 * 60 * 1000;
+						    
+						    // Generate the end date.
+                            var endDate = new Date();
+						    endDate.setTime(startDate.getTime() + millis);
+						    
+						    $("span.regimenCyclesEndDate").html("<i class=\"icon-arrow-right\"></i>&nbsp;Your study will end on " + endDate.toDateString() + ".");
 						}
 					}
 
