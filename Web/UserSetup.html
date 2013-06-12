@@ -1199,7 +1199,7 @@
 							var entireOption = $(
 									'<label class="checkbox"></label>').append(
 									checkbox).append(
-									'<span class="">' + label + '</span>');
+									'<span>' + label + '</span>');
 
 							// Add the entire option to the div.
 							div.append(entireOption);
@@ -1373,7 +1373,7 @@
 									// Verify that it is in the list.
 									if (allowedValues.indexOf(regimenBs[i]) === -1) {
 										alertUser(
-												"Illegal Regimen Combination",
+												"Regimen Combination Not Medically Indicated ",
 												"In the second regimen section, multiple "
 														+ "regimens were combined that were not "
 														+ "allowed to be combined.");
@@ -1517,8 +1517,10 @@
 							var success = function(data) {
 								// Check that we indicated success.
 								if (data['result'] === "success") {
+									
 									alertUser("Success",
 											"The phone app for Trialist is ready to go! Welcome to the PREEMPT study.");
+									
 								} else {
 									var failureObject = data['errors'][0];
 									if (failureObject['code'] === "0200") {
