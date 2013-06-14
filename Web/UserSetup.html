@@ -122,7 +122,7 @@
 						<h3 id="alertHeader"></h3>
 					</div>
 					<div class="modal-body">
-						<p id="alertInfo"></p>
+						<div class="alertInfo"></div>
 					</div>
 				</div>
 				
@@ -478,7 +478,7 @@
 							return true;
 						};
 					}
-
+					
 					// The list of radio buttons refrencing the regimen.
 					var REGIMEN_RADIOS = [];
 
@@ -507,8 +507,10 @@
 							[ "1", "2", "3", "4", "5", "6", "7" ],
 							[ "0", "2", "4", "7" ],
 							[ "0", "1", "2", "3", "4", "5", "6", "7" ],
-							[ "0", "2", "7" ], [ "0", "1", "2", "7" ],
-							[ "0", "2", "7" ], [ "0", "2", "7" ],
+							[ "0", "2", "7" ],
+							[ "0", "1", "2", "7" ],
+							[ "0", "2", "7" ],
+							[ "0", "2", "7" ],
 							[ "0", "1", "2", "3", "4", "5", "6" ] ];
 
 					// The Trialist class' unique identifier.
@@ -528,6 +530,9 @@
 					var PROMPT_ID_COGNITIVE_FUNCTION = "cognitiveFunction";
 					var PROMPT_ID_NEUROPATHIC_PAIN_TAKEN = "neuropathicPainTaken";
 					var PROMPT_ID_USER_SELECTED = "userSelected";
+					
+					//var TRAMADOL_WARNING = "Patients should be cautioned about the concomitant use of tramadol with other opioids because of potentially serious CNS depressant effects of these agents. Similarly, hydrocodone should not be given simultaneously with oxycodone ";
+					//var OXY_HYDROCODONE_WARNING = "Patients should be cautioned about the concomitant use of hydrocodone with oxycodone because of potentially serious CNS depressant effects of these agents. Similarly, hydrocodone should not be given simultaneously with oxycodone";
 
 					// The list of checkboxes for each regimen.
 					var CHECKBOX_REGIMEN_A = [];
@@ -535,6 +540,12 @@
 					
 					// Global array for the user list
                     var usernames = new Array();
+					
+					// Variable to hold the end date value
+					// because it is calculated in an anonymous
+					// function
+					var endDateValue;
+					var endDateAsDate = new Date();
 
 					// Connect the help button with its functionality.
 					$("#help").click(function() {
@@ -581,7 +592,12 @@
 					} catch (e) {
 						alertUser("Error", "An unknown error occurred: " + e);
 					}
-
+				    
+					
+					function setEndDateValue(value) {
+						endDateValue = value;
+					}
+					
 					/**
 					 * Converts an XML string into a DOM object.
 					 */
@@ -643,9 +659,7 @@
 					 * problem!?
 					 */
 					function parseISO8601(dateStringInRange) {
-						var isoExp = /^\s*(\d{4})-(\d\d)-(\d\d)\s*$/, date = new Date(
-								NaN), month, parts = isoExp
-								.exec(dateStringInRange);
+						var isoExp = /^\s*(\d{4})-(\d\d)-(\d\d)\s*$/, date = new Date(NaN), month, parts = isoExp.exec(dateStringInRange);
 
 						if (parts) {
 							month = +parts[2];
@@ -698,9 +712,13 @@
 					/**
 					 * Uses some UI element to alert the user that something has happened.
 					 */
-					function alertUser(header, info) {
+					function alertUser(header, info, isHtml) {
 						$("#alertHeader").text(header);
-						$("#alertInfo").text(info);
+						if(isHtml !== undefined) {
+						     $("div.alertInfo").html('<p>' + info + '</p>');
+						} else {
+							$("div.alertInfo").html(info);
+						}
 						$("#alertModal").modal('show');
 					}
 
@@ -739,6 +757,7 @@
 							
 							// NOTE: if the XML values have changed for the duration
 							// or cycles, this code will need to be updated.
+							// FIXME using the <value> attribute for the property in the XML
 							
 							var duration = -1;
 							var regimenCycles = -1;
@@ -761,11 +780,12 @@
 							
 						    var millis = duration * regimenCycles * 2 * 24 * 60 * 60 * 1000;
 						    
-						    // Generate the end date.
-                            var endDate = new Date();
-						    endDate.setTime(startDate.getTime() + millis);
+						    var endDateValue = new Date();
+						    endDateValue.setTime(startDate.getTime() + millis);
 						    
-						    $("span.regimenCyclesEndDate").html("<i class=\"icon-arrow-right\"></i>&nbsp;Your study will end on " + endDate.toDateString() + ".");
+						    $("span.regimenCyclesEndDate").html("<i class=\"icon-arrow-right\"></i>&nbsp;Your study will end on " + endDateValue.toDateString() + ".");
+						    
+						    setEndDateValue(endDateValue.toDateString());
 						}
 					}
 
@@ -1030,7 +1050,7 @@
 						// Populate the checkboxes for regimen list A.
 						CHECKBOX_REGIMEN_A = CHECKBOX_REGIMEN_A
 								.concat(populateCheckboxFromProperties(root,
-										divA, properties));
+										divA, properties, 'A'));
 
 						// Get the list of properties for regimen list B.
 						properties = getPropertiesFromPrompt(root, survey,
@@ -1038,7 +1058,7 @@
 						// Populate the checkboxes for regimen list B.
 						CHECKBOX_REGIMEN_B = CHECKBOX_REGIMEN_B
 								.concat(populateCheckboxFromProperties(root,
-										divB, properties));
+										divB, properties, 'B'));
 					}
 
 					/**
@@ -1158,7 +1178,7 @@
 					 * Returns a list containing the generated checkboxes.
 					 */
 					function populateCheckboxFromProperties(root, div,
-							properties) {
+							properties, spanIdPrefix) {
 						var currProperty = null;
 						var result = [];
 						while ((currProperty = nextElement(properties)) !== null) {
@@ -1199,7 +1219,7 @@
 							var entireOption = $(
 									'<label class="checkbox"></label>').append(
 									checkbox).append(
-									'<span>' + label + '</span>');
+									'<span class="regimen' + spanIdPrefix + key + '">' + label + '</span>');
 
 							// Add the entire option to the div.
 							div.append(entireOption);
@@ -1402,6 +1422,19 @@
 										"Please choose a start date.");
 								return;
 							}
+							var startDateAsDate = new Date(startDate);
+							var today = new Date();
+							today.setUTCHours(0);
+							today.setUTCMinutes(0);
+							today.setUTCSeconds(0);
+							today.setUTCMilliseconds(0);
+							
+							if(startDateAsDate.valueOf() < today.valueOf()) {
+								alertUser("Invalid Start Date",
+                                "Please choose a start date that is not in the past.");
+							    return;
+							}
+							
 							startDate = startDate + " 00:00:00";
 
 							// Get the regimen duration value.
@@ -1421,13 +1454,13 @@
 							}
 
 							// Generate a random value for the pattern.
-							var regimenRandom = Math.floor(Math.random() * 1000
-									* MAX_RANDOM)
-									% MAX_RANDOM;
+							var regimenRandom = Math.floor(Math.random() * 1000 * MAX_RANDOM) % MAX_RANDOM;
+							
+							var regimenArray = ['AB-AB', 'AB-BA', 'BA-AB', 'BA-BA'];
 
 							// Get the primary outcome text.
-							var cognitiveFunction = $("#cognitiveFunction")
-									.val();
+							var cognitiveFunction = $("#cognitiveFunction").val();
+							
 							if (cognitiveFunction === null) {
 								alertUser("No Cognitive Function Outcome Selected",
 										"Please choose a cognitive function outcome.");
@@ -1437,10 +1470,8 @@
 							// Get the list of required survey IDs.
 							var surveyIds = REQUIRED_SURVEY_IDS.slice();
 							// Ensure that a cognitive function was selected.
-							var cognitiveFunction = $("#cognitiveFunction")
-									.val();
-							if ((cognitiveFunction === null)
-									|| (cognitiveFunction === "")) {
+							var cognitiveFunction = $("#cognitiveFunction").val();
+							if ((cognitiveFunction === null) || (cognitiveFunction === "")) {
 								alertUser("No Cognitive Outcome Function Selected",
 										"Please choose a cognitive function outcome.");
 								return;
@@ -1518,8 +1549,86 @@
 								// Check that we indicated success.
 								if (data['result'] === "success") {
 									
+									var regimenAString = new String();
+									var regimenBString = new String();
+									
+									var first = true;
+									
+									for(var i = 0; i < regimenAs.length; i++) {
+										if(first) {
+											first = false;
+										} else {
+											regimenAString = regimenAString + '; ';	
+										}
+										
+										regimenAString = regimenAString + $("span.regimenA" + regimenAs[i]).text();
+									}
+									
+									first = true;
+                                    for(var i = 0; i < regimenBs.length; i++) {
+                                    	if(first) {
+                                            first = false;
+                                        } else {
+                                            regimenBString = regimenBString + '; ';  
+                                        }
+                                    	
+                                        regimenBString = regimenBString + $(("span.regimenB" + regimenBs[i])).text();
+                                    }
+                                    
+                                    var actualRegimenCycles = -1;
+                                    
+                                    if(regimenCycles == 0) {
+                                        actualRegimenCycles = 2; 
+                                    } else if(regimenCycles == 1) {
+                                        actualRegimenCycles = 3;
+                                    } else if(regimenCycles == 2) {
+                                        actualRegimenCycles = 4;
+                                    }
+                                    
+                                    var durationInDays = -1;
+                                    
+                                    if(regimenDuration == 0) {
+                                        durationInDays = 2;
+                                    } else if(regimenDuration == 1) {
+                                        durationInDays = 7;
+                                    } else if(regimenDuration == 2) {
+                                        durationInDays = 14;
+                                    }
+                                    
+/*                                     var showTramadolWarning = ((regimenAs.contains(4) != -1) 
+                                    		&& ((regimenAs.contains(5) != -1) || (regimenAs.contains(6) != -1)));
+                                    
+                                    var showOxyHydrocodoneWarning = ((regimenAs.contains(5) != -1) && (regimenAs.contains(6) != -1))
+
+                                    var warningText = "";
+                                    
+                                    if(showTramadolWarning) {
+                                    	warningText = warningText + TRAMADOL_WARNING;
+                                    }
+                                    
+                                    if(showOxyHydrocodoneWarning) {
+                                    	warningText = warningText + OXY_HYDROCODONE_WARNING;
+                                    }
+                                    
+                                    if(showTramadolWarning || showOxyHydrocodoneWarning) {
+                                    	warningText = '<em>' + warningText + '</em>';
+                                    }
+ */                                    
+									var tablePreamble = '<table class="table table-striped table-bordered">'
+									var patientRow = '<tr><td>Patient Login</td><td>' + username + '</td></tr>';
+									var regimenARow = '<tr><td>Regimen A</td><td>' + regimenAString + '</td></tr>';
+									var regimenBRow = '<tr><td>Regimen B</td><td>' + regimenBString + '</td></tr>';
+									var regimenPlanRow = '<tr><td>Regimen Plan</td><td>' + regimenArray[regimenRandom] + '</td></tr>';
+									var periodLengthRow = '<tr><td>Period Length</td><td>' + durationInDays + ' days</td></tr>';
+									var numberOfCyclesRow = '<tr><td>Number of Cycles</td><td>' + actualRegimenCycles + '</td></tr>';
+									var startDateRow = '<tr><td>Start Date</td><td>' + startDateAsDate.toDateString() + '</td></tr>';
+									var endDateRow = '<tr><td>End Date</td><td>' + endDateValue + '</td></tr></table>';
+									
+									var table = tablePreamble + patientRow + regimenARow + regimenBRow 
+									   + regimenPlanRow + periodLengthRow + numberOfCyclesRow + startDateRow + endDateRow;
+									
 									alertUser("Success",
-											"The phone app for Trialist is ready to go! Welcome to the PREEMPT study.");
+											  "<strong>The phone app for Trialist is ready to go! Welcome to the PREEMPT study.</strong>" + table, true)
 									
 								} else {
 									var failureObject = data['errors'][0];
