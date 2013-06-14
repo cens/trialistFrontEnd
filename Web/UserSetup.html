@@ -3,9 +3,11 @@
   
   <head>
     <!-- The META information for parsing this file. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta http-equiv="X-UA-Compatible" content="IE=8"><!-- Force IE8 Mode because IE9 mode is unusable -->
+    
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=8"> Force IE8 Mode because IE9 mode is unusable -->
     
     <!-- The title at the top of the page. -->
     <title>Trialist Setup</title>
@@ -13,6 +15,11 @@
     <!-- JSON because IE<8 -->
     <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.min.js">
     </script>
+    
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
     
     <!-- jQuery stuff -->
     <script src="js/jquery-1.9.0.min.js"></script>
@@ -604,7 +611,7 @@
 					function convertXmlStringToDomObject(xml) {
 						var xmlDoc = null;
 
-						if (window.DOMParser) {
+						if (window.DOMParser && (! (navigator.userAgent.indexOf("MSIE 9") > -1))) {
 							var parser = new DOMParser();
 							xmlDoc = parser.parseFromString(xml, "text/xml");
 						} else // Internet Explorer
@@ -622,7 +629,7 @@
 					 */
 					function evaluateXpath(root, node, expression) {
 						var result;
-						if (window.DOMParser) {
+						if (window.DOMParser && (! (navigator.userAgent.indexOf("MSIE 9") > -1))) {
 							result = root.evaluate(expression, node, null,
 									XPathResult.ANY_TYPE, null);
 						} else // Internet Explorer
@@ -636,7 +643,7 @@
 					 * Returns the next element from a list of elements.
 					 */
 					function nextElement(node) {
-						if (window.DOMParser) {
+						if (window.DOMParser && (! (navigator.userAgent.indexOf("MSIE 9") > -1))) {
 							return node.iterateNext();
 						} else {
 							return node.nextNode();
@@ -647,7 +654,7 @@
 					 * Returns the text for the node.
 					 */
 					function elementValue(node) {
-						if (window.DOMParser) {
+						 if (window.DOMParser && (! (navigator.userAgent.indexOf("MSIE 9") > -1))) {
 							return node.textContent;
 						} else {
 							return node.text;
