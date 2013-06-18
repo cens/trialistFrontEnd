@@ -13,12 +13,12 @@
     <title>Trialist Setup</title>
     
     <!-- JSON because IE<8 -->
-    <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.min.js">
+    <script src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.min.js">
     </script>
     
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     
     <!-- jQuery stuff -->
@@ -441,7 +441,7 @@
 				<div class="row-fluid"
 					style="background: #808080; padding-bottom: 3px; margin: 0px;">
 					<div class="pull-right">
-					    <img src="images/omh_logo-white.png" height="91" width="225" alt="Open mHealth Logo" />
+					    <img src="images/omh_logo-white.png" style="height: 91px; width: 225px;" alt="Open mHealth Logo" />
 					</div>
 				</div>
 
@@ -454,6 +454,7 @@
         of the UI elements have been setup.
      -->
     <script type="text/javascript">
+    
 					// Extend the Array prototype to contain an indexOf function.
 					if (!Array.prototype.indexOf) {
 						Array.prototype.indexOf = function(needle) {
@@ -610,15 +611,15 @@
 					 */
 					function convertXmlStringToDomObject(xml) {
 						var xmlDoc = null;
-
-						if (window.DOMParser && (! (navigator.userAgent.indexOf("MSIE 9") > -1))) {
-							var parser = new DOMParser();
-							xmlDoc = parser.parseFromString(xml, "text/xml");
-						} else // Internet Explorer
-						{
+					    
+						if(isIE()) {
 							xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-							xmlDoc.async = false;
-							xmlDoc.loadXML(xml);
+                            xmlDoc.async = false;
+                            xmlDoc.loadXML(xml);
+						} 
+						else {
+							var parser = new DOMParser();
+                            xmlDoc = parser.parseFromString(xml, "text/xml");
 						}
 
 						return xmlDoc;
@@ -628,14 +629,17 @@
 					 * Runs the document.evaluate() method based on the current browser.
 					 */
 					function evaluateXpath(root, node, expression) {
+						
 						var result;
-						if (window.DOMParser && (! (navigator.userAgent.indexOf("MSIE 9") > -1))) {
-							result = root.evaluate(expression, node, null,
-									XPathResult.ANY_TYPE, null);
-						} else // Internet Explorer
-						{
+						
+						if(isIE()) {
 							result = node.selectNodes(expression);
 						}
+						else {
+							result = root.evaluate(expression, node, null,
+                                    XPathResult.ANY_TYPE, null);
+						}
+						
 						return result;
 					}
 
@@ -643,10 +647,11 @@
 					 * Returns the next element from a list of elements.
 					 */
 					function nextElement(node) {
-						if (window.DOMParser && (! (navigator.userAgent.indexOf("MSIE 9") > -1))) {
-							return node.iterateNext();
-						} else {
+						if(isIE()) {
 							return node.nextNode();
+						}
+						else {
+							return node.iterateNext();
 						}
 					}
 
@@ -654,11 +659,12 @@
 					 * Returns the text for the node.
 					 */
 					function elementValue(node) {
-						 if (window.DOMParser && (! (navigator.userAgent.indexOf("MSIE 9") > -1))) {
-							return node.textContent;
-						} else {
-							return node.text;
-						}
+						 if(isIE()) {
+							 return node.text; 
+						 } 
+						 else {
+							 return node.textContent; 
+						 }
 					}
 
 					/**
@@ -677,7 +683,17 @@
 						}
 						return date;
 					}
-
+				    
+					/**
+					 * Check for IE :(
+					 */
+					function isIE() {
+						return (window.DOMParser === undefined) 
+						  || (navigator.userAgent.indexOf("MSIE 9") != -1)
+						  || (navigator.userAgent.indexOf("MSIE 10") != -1);
+					}
+					
+					
 					/**
 					 * randomUUID.js - Version 1.0
 					 *
