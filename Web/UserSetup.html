@@ -408,7 +408,7 @@
 				<div class="light-grey row-fluid" style="margin-bottom: 0px;">
 					<form class="form-horizontal" action="#">
 						<h4 class="heading" style="padding-left: 10px; color: white;">
-							Pain Outcome
+							Optional Neuropathic Pain Outcome
 						</h4>
 					</form>
 				</div>
@@ -495,15 +495,22 @@
 					var MAX_RANDOM;
 
 					// The list of required survey IDs.
-					var REQUIRED_SURVEY_IDS = [ 'peg',
-							'sleepDisturbanceSurvey', 'fatigueSurvey',
-							'drowsinessSurvey', 'constipationSurvey' ];
-					var SURVEY_IDS_COGNITIVE_FUNCTION = [
-							'cognitiveFunctionSlowThinkingSurvey',
-							'cognitiveFunctionFoggyThinkingSurvey',
-							'cognitiveFunctionTroubleConcentratingSurvey',
-							'cognitiveFunctionWorkingHarderSurvey' ];
-					var SURVEY_ID_NEUROPATHIC_PAIN = 'neuropathicPainSurvey';
+					var REQUIRED_PROMPT_IDS = [ 'averagePainIntensity',
+							'enjoymentOfLife', 'generalActivity', 'fatiguePrompt', 
+							'drowsinessPrompt', 'constipationPrompt'];
+					
+					var PROMPT_IDS_COGNITIVE_FUNCTION = [
+							'cognitiveFunctionSlowThinkingPrompt',
+							'cognitiveFunctionFoggyThinkingPrompt',
+							'cognitiveFunctionTroubleConcentratingPrompt',
+							'cognitiveFunctionWorkingHarderPrompt' ];
+					
+					var PROMPT_IDS_NEUROPATHIC_PAIN = ['experiencePain',
+					        'painSharpness', 'painHotness', 'painSensitivity'];
+					
+					var SURVEY_ID_SLEEP = 'sleep';
+					var PROMPT_ID_SLEEP = 'sleepDisturbancePrompt';
+					
 					// The list of optional survey ID elements, which should be added when
 					// reading the campaign's contents.
 					var OPTIONAL_SURVEY_ID_ELEMENTS = [];
@@ -528,6 +535,9 @@
 					var CAMPAIGN_ID = "urn:campaign:trialist";
 					// The ID of the survey that contains all of the setup prompts.
 					var SETUP_SURVEY_ID = "setup";
+					// The ID of the survey that contains the prompts in the main user survey
+                    var MAIN_SURVEY_ID = "main";
+					
 					// The prompt IDs from the setup survey.
 					var PROMPT_ID_REGIMEN_A = "regimenA";
 					var PROMPT_ID_REGIMEN_B = "regimenB";
@@ -535,13 +545,11 @@
 					var PROMPT_ID_REGIMEN_DURATION = "regimenDuration";
 					var PROMPT_ID_REGIMEN_CYCLES = "numberComparisonCycles";
 					var PROMPT_ID_RANDOM = "random";
+					var PROMPT_ID_RANDOM_AS_TEXT = "randomAsText";
 					var PROMPT_ID_COGNITIVE_FUNCTION = "cognitiveFunction";
 					var PROMPT_ID_NEUROPATHIC_PAIN_TAKEN = "neuropathicPainTaken";
 					var PROMPT_ID_USER_SELECTED = "userSelected";
 					
-					//var TRAMADOL_WARNING = "Patients should be cautioned about the concomitant use of tramadol with other opioids because of potentially serious CNS depressant effects of these agents. Similarly, hydrocodone should not be given simultaneously with oxycodone ";
-					//var OXY_HYDROCODONE_WARNING = "Patients should be cautioned about the concomitant use of hydrocodone with oxycodone because of potentially serious CNS depressant effects of these agents. Similarly, hydrocodone should not be given simultaneously with oxycodone";
-
 					// The list of checkboxes for each regimen.
 					var CHECKBOX_REGIMEN_A = [];
 					var CHECKBOX_REGIMEN_B = [];
@@ -801,7 +809,7 @@
                             	regimenCycles = 4;
                             }
 							
-						    var millis = duration * regimenCycles * 2 * 24 * 60 * 60 * 1000;
+						    var millis = duration * regimenCycles * 24 * 60 * 60 * 1000;
 						    
 						    var endDateValue = new Date();
 						    endDateValue.setTime(startDate.getTime() + millis);
@@ -1023,12 +1031,11 @@
 												OPTIONAL_SURVEY_ID_ELEMENTS);
 
 										// Populate the number of cycles.
-										MAX_RANDOM = getNumChoices(xmlObject,
-												setupSurvey, PROMPT_ID_RANDOM);
+										MAX_RANDOM = 2; // getNumChoices(xmlObject,setupSurvey, PROMPT_ID_RANDOM);
 
-										// Create a choice for the "primary" outcome.
+										// Create a choice for the cognitive functioning outcome.
 										populateSelectFromSingleItemSurveys(xmlObject,
-												SURVEY_IDS_COGNITIVE_FUNCTION,
+												PROMPT_IDS_COGNITIVE_FUNCTION,
 												cognitiveFunction);
 									}
 								} else {
@@ -1254,73 +1261,43 @@
 					/**
 					 * Populates a HTML select tag with prompt text for the given single-item surveys. 
 					 */
-					function populateSelectFromSingleItemSurveys(root, surveyIds, select) {
-						// Cycles through the survey IDs.
-						for ( var i = 0; i < surveyIds.length; i++) {
-							// Get the survey ID.
-							var surveyId = surveyIds[i];
+					function populateSelectFromSingleItemSurveys(root, promptIds, select) {
+						// Cycles through the prompt IDs.
+						for ( var i = 0; i < promptIds.length; i++) {
+							// Get the prompt ID.
+							var promptId = promptIds[i];
 
-							// Get the survey XML nodes.
-							var surveyNodes = evaluateXpath(root, root,
-									'/campaign/surveys/survey[id="' + surveyId
-											+ '"]');
+							// Get the prompt XML nodes.
+							// FIXME: This might break on FF and IE
+							var promptNodes = evaluateXpath(root, root,
+									'/campaign/surveys/survey[id="' + MAIN_SURVEY_ID
+											+ '"]' + '/contentList/prompt[id="' + promptId + '"]');
 
-							// Get the survey XML nodes.
-							var currSurvey = nextElement(surveyNodes);
-							if (currSurvey === null) {
-								throw "The survey does not exist: " + surveyId;
+							// Get the prompt XML nodes.
+							var currPrompt = nextElement(promptNodes);
+							if (currPrompt === null) {
+								throw "The prompt does not exist: " + promptId;
 							}
 
-							// XPath to the name element.
-							var titleElements = evaluateXpath(root, currSurvey,
-									'./contentList/prompt/promptText');
+							// XPath to the text element.
+							var textElements = evaluateXpath(root, currPrompt, './promptText');
 
 							// Get the name element.
-							var titleElement = nextElement(titleElements);
-							if (titleElement === null) {
-								throw "The survey is missing its title.";
+							var textElement = nextElement(textElements);
+							if (textElement === null) {
+								throw "The prompt is missing its text.";
 							}
 
 							// Get the name value.
-							var title = elementValue(titleElement);
+							var text = elementValue(textElement);
 
 							// Add the value to the select's choices.
-							select.append('<option value="' + surveyId + '">' + title + '</option>');
+							select.append('<option value="' + promptId + '">' + text + '</option>');
 						}
 
 						// Reset the selected index to -1, so that the user must explicitly
 						// choose an option.
 						select.prop('selectedIndex', -1);
-					}
-
-					/**
-					 * Gets the number of properties, i.e. the number of choices. The 
-					 * prompt must be a single_choice, single_choice_custom, multi_choice,
-					 * or multi_choice_custom prompt.
-					 */
-					function getNumChoices(root, survey, promptId) {
-						// Get the prompt elements.
-						var prompts = evaluateXpath(root, survey,
-								'.//prompt[id="' + promptId + '"]');
-
-						// Get the singular prompt element.
-						var prompt = nextElement(prompts);
-						if (prompt === null) {
-							throw "The " + promptId + " prompt is missing.";
-						}
-
-						// Get the prompt's properties.
-						var properties = evaluateXpath(root, prompt,
-								'.//property');
-
-						// Set the count to 0.
-						var count = 0;
-						while (nextElement(properties)) {
-							count++;
-						}
-
-						// Return the count.
-						return count;
 					}
 
 					/**
@@ -1458,6 +1435,10 @@
 							    return;
 							}
 							
+							/* if((endDateAsDate.getMonth() - startDateAsDate.getMonth() + (12 * (DisplayTo.getFullYear() - DisplayFrom.getFullYear()))) {
+								
+							} */
+							
 							startDate = startDate + " 00:00:00";
 
 							// Get the regimen duration value.
@@ -1475,12 +1456,71 @@
 										"Please choose a number of cycles.");
 								return;
 							}
+							
+                            var actualRegimenCycles = -1;
+                            
+                            if(regimenCycles == 0) {
+                                actualRegimenCycles = 2; 
+                            } else if(regimenCycles == 1) {
+                                actualRegimenCycles = 3;
+                            } else if(regimenCycles == 2) {
+                                actualRegimenCycles = 4;
+                            }
 
 							// Generate a random value for the pattern.
-							var regimenRandom = Math.floor(Math.random() * 1000 * MAX_RANDOM) % MAX_RANDOM;
 							
-							var regimenArray = ['AB-AB', 'AB-BA', 'BA-AB', 'BA-BA'];
-
+							var randoms = [];
+							
+							for(var i = 0; i < actualRegimenCycles; i++) {
+								randoms.push(Math.floor(Math.random() * 1000 * MAX_RANDOM) % MAX_RANDOM);
+							}
+							
+							// Generate the random regimen plan as a text string in case people want it in the future
+							
+							var randomsArray = [];
+							for(var i = 0; i < randoms.length; i++) {
+								if(randoms[i] == 0) {
+									randomsArray.push('AB');	
+								} else {
+									randomsArray.push('BA');
+								}
+							}
+							
+							var randomsAsText = randomsArray.toString();
+							
+							randoms.reverse();
+							
+							// Pad with zeros to make the binary math work
+							
+							if(randoms.length < 3) {
+								for(var i = 0; i < (3 - randoms.length ); i++) {
+									randoms.push(0);
+								}
+							}
+							
+							// 0 == AB
+							// 1 == BA
+							
+							var random = 0;
+							
+							for(var i = 0; i < randoms.length; i++) {
+							     if(i == 0) {
+							    	 if(randoms[i] == 1) {
+							    		 random = random + 1;
+							    	 }
+							     }
+							     if(i == 1) {
+                                     if(randoms[i] == 1) {
+                                         random = random + 2;
+                                     }
+                                 }
+							     if(i == 2) {
+                                     if(randoms[i] == 1) {
+                                         random = random + 4;
+                                     }
+                                 }
+							}
+														
 							// Get the primary outcome text.
 							var cognitiveFunction = $("#cognitiveFunction").val();
 							
@@ -1491,7 +1531,7 @@
 							}
 
 							// Get the list of required survey IDs.
-							var surveyIds = REQUIRED_SURVEY_IDS.slice();
+							var promptIds = REQUIRED_PROMPT_IDS.slice();
 							// Ensure that a cognitive function was selected.
 							var cognitiveFunction = $("#cognitiveFunction").val();
 							if ((cognitiveFunction === null) || (cognitiveFunction === "")) {
@@ -1499,13 +1539,16 @@
 										"Please choose a cognitive function outcome.");
 								return;
 							}
-							surveyIds.push(cognitiveFunction);
+							promptIds.push(cognitiveFunction);
+							
 							// If it is checked, set the flag and add it to the list of
 							// survey IDs.
 							var isNeuropathicPain = 0;
 							if ($("#neuropathicPain").is(":checked")) {
 								isNeuropathicPain = 1;
-								surveyIds.push(SURVEY_ID_NEUROPATHIC_PAIN);
+								for(var i = 0; i < PROMPT_IDS_NEUROPATHIC_PAIN.length; i++) {
+									promptIds.push(PROMPT_IDS_NEUROPATHIC_PAIN[i]);	
+								}
 							}
 
 							// Build the survey response.
@@ -1543,7 +1586,11 @@
 										},
 										{
 											"prompt_id" : PROMPT_ID_RANDOM,
-											"value" : regimenRandom
+											"value" : random
+										},
+										{
+											"prompt_id" : PROMPT_ID_RANDOM_AS_TEXT,
+											"value" : randomsAsText
 										},
 										{
 											"prompt_id" : PROMPT_ID_COGNITIVE_FUNCTION,
@@ -1597,17 +1644,7 @@
                                     	
                                         regimenBString = regimenBString + $(("span.regimenB" + regimenBs[i])).text();
                                     }
-                                    
-                                    var actualRegimenCycles = -1;
-                                    
-                                    if(regimenCycles == 0) {
-                                        actualRegimenCycles = 2; 
-                                    } else if(regimenCycles == 1) {
-                                        actualRegimenCycles = 3;
-                                    } else if(regimenCycles == 2) {
-                                        actualRegimenCycles = 4;
-                                    }
-                                    
+                                                                        
                                     var durationInDays = -1;
                                     
                                     if(regimenDuration == 0) {
@@ -1618,25 +1655,6 @@
                                         durationInDays = 14;
                                     }
                                     
-/*                                     var showTramadolWarning = ((regimenAs.contains(4) != -1) 
-                                    		&& ((regimenAs.contains(5) != -1) || (regimenAs.contains(6) != -1)));
-                                    
-                                    var showOxyHydrocodoneWarning = ((regimenAs.contains(5) != -1) && (regimenAs.contains(6) != -1))
-
-                                    var warningText = "";
-                                    
-                                    if(showTramadolWarning) {
-                                    	warningText = warningText + TRAMADOL_WARNING;
-                                    }
-                                    
-                                    if(showOxyHydrocodoneWarning) {
-                                    	warningText = warningText + OXY_HYDROCODONE_WARNING;
-                                    }
-                                    
-                                    if(showTramadolWarning || showOxyHydrocodoneWarning) {
-                                    	warningText = '<em>' + warningText + '</em>';
-                                    }
- */                                    
 									var tablePreamble = '<table class="table table-striped table-bordered">'
 									var patientRow = '<tr><td>Patient Login</td><td>' + username + '</td></tr>';
 									var regimenARow = '<tr><td>Regimen A</td><td>' + regimenAString + '</td></tr>';
@@ -1668,20 +1686,7 @@
 							// Submit the request.
 							var authToken = getAuthToken();
 							if (authToken != null) {
-								// Build the survey IDs string.
-								var surveyIdsString = '';
-								var firstPass = true;
-								for ( var i = 0; i < surveyIds.length; i++) {
-									if (firstPass) {
-										firstPass = false;
-									} else {
-										surveyIdsString = surveyIdsString + ",";
-									}
-
-									surveyIdsString = surveyIdsString
-											+ surveyIds[i];
-								}
-
+ 
 								// Create the parameters list.
 								var parameters = {
 									"client" : "TrialistWeb",
@@ -1689,13 +1694,25 @@
 									"username" : username,
 									"class_urn" : CLASS_ID,
 									"campaign_urn" : CAMPAIGN_ID,
-									"survey_id_list" : surveyIdsString,
+									"survey_id_map" : [
+									    {
+									    	"survey_id": MAIN_SURVEY_ID,
+									        "prompt_ids":[ promptIds ] 
+									    },
+									    {
+									    	"survey_id" : SURVEY_ID_SLEEP,
+									    	"prompt_ids" : [ PROMPT_ID_SLEEP ]
+									    }
+									 	
+									],
 									"surveys" : JSON.stringify(surveyResponses)
 								};
 								
+                                alert(JSON.stringify(parameters));
+ 
 								// Make the request.
-								$.post("/app/campaign/assign", parameters,
-										success).fail(failure);
+							/* 	$.post("/app/campaign/assign", parameters,
+										success).fail(failure); */
 							}
 						} catch (e) {
 							alertUser("Error",
