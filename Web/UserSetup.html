@@ -301,7 +301,7 @@
 			    
 				<div class="well" style="margin: 0px;">
 
-					<div class="row" style="margin: 10px;">
+					<div class="row" style="margin: 10px; border: 1px solid #738077; padding: 5px;">
 					    
 						<p><i class="icon-arrow-right"></i> Will
 							there be any pain treatments that you will continue to use
@@ -315,13 +315,13 @@
                     <hr/>
                     
 					<form class="form-horizontal" action="#">
-						<div class="control-group">
+						<div class="control-group" title="A treatment or treatments you will use in your personalized trial.">
 							<label class="control-label">Regimen A:</label>
 							<div id="regimenA" class="controls"></div>
 						</div>
 					</form>
 					<form class="form-horizontal" action="#">
-						<div class="control-group">
+						<div class="control-group" title="Treatment or treatments you will compare against your Regimen A selections.">
 							<label class="control-label">Regimen B:</label>
 							<div id="regimenB" class="controls"></div>
 						</div>
@@ -330,7 +330,7 @@
 					<hr/>
 					
 					<form class="form-horizontal" action="#">
-						<div class="control-group">
+						<div class="control-group" title="The day you start your personalized trial.">
 							<label class="control-label">Study Start Date:</label>
 							<div class="controls">
 								<div class="input-append date datepicker" id="startDatePicker"
@@ -343,16 +343,16 @@
 					</form>
 					
 					<form class="form-horizontal" action="#">
-						<div class="control-group">
+						<div class="control-group" title="The number of weeks you will spend on each Regimen. At the end of the period you will be prompted to switch to the next Regimen.">
 							<label class="control-label">Period Length:</label>
 							<div class="controls">
-								<select id="regimenDuration" title="Time on each regimen.">
+								<select id="regimenDuration">
 								</select>
 							</div>
 						</div>
 					</form>
 					<form class="form-horizontal" action="#">
-						<div class="control-group">
+						<div class="control-group" title="The number of times you complete a full cycle (one cycle is Regimen A followed by Regimen B, or Regimen B followed by Regimen A).">
 							<label class="control-label">Number of Cycles:</label>
 							<div class="controls">
 								<select id="regimenCycles">
@@ -486,6 +486,13 @@
 							return true;
 						};
 					}
+					
+					 $(document).ready(function () {
+		                $("div").tooltip({
+		                  'selector': '',
+		                  'placement': 'left'
+		                });
+			        });
 					
 					// The list of radio buttons refrencing the regimen.
 					var REGIMEN_RADIOS = [];
@@ -1691,14 +1698,13 @@
 									var patientRow = '<tr><td>Patient Login</td><td>' + username + '</td></tr>';
 									var regimenARow = '<tr><td>Regimen A</td><td>' + regimenAString + '</td></tr>';
 									var regimenBRow = '<tr><td>Regimen B</td><td>' + regimenBString + '</td></tr>';
-									var regimenPlanRow = '<tr><td>Regimen Plan</td><td>' + regimenArray[regimenRandom] + '</td></tr>';
 									var periodLengthRow = '<tr><td>Period Length</td><td>' + durationInDays + ' days</td></tr>';
 									var numberOfCyclesRow = '<tr><td>Number of Cycles</td><td>' + actualRegimenCycles + '</td></tr>';
 									var startDateRow = '<tr><td>Start Date</td><td>' + startDateAsDate.toDateString() + '</td></tr>';
 									var endDateRow = '<tr><td>End Date</td><td>' + endDateValue + '</td></tr></table>';
 									
 									var table = tablePreamble + patientRow + regimenARow + regimenBRow 
-									   + regimenPlanRow + periodLengthRow + numberOfCyclesRow + startDateRow + endDateRow;
+									    + periodLengthRow + numberOfCyclesRow + startDateRow + endDateRow;
 									
 									alertUser("Success",
 											  "<strong>The phone app for Trialist is ready to go! Welcome to the PREEMPT study.</strong>" + table, true)
@@ -1726,17 +1732,17 @@
 									"username" : username,
 									"class_urn" : CLASS_ID,
 									"campaign_urn" : CAMPAIGN_ID,
-									"survey_prompt_map" : [
+									"survey_prompt_map" : JSON.stringify([
 									    {
 									    	"survey_id": MAIN_SURVEY_ID,
-									        "prompt_ids":[ promptIds ] 
+									        "prompt_ids": promptIds  
 									    },
 									    {
 									    	"survey_id" : SURVEY_ID_SLEEP,
 									    	"prompt_ids" : [ PROMPT_ID_SLEEP ]
 									    }
 									 	
-									],
+									]),
 									"surveys" : JSON.stringify(surveyResponses)
 								};
 								
