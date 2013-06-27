@@ -561,7 +561,7 @@
 					// because it is calculated in an anonymous
 					// function
 					var endDateValue;
-					var endDateAsDate = new Date();
+					var endDateAsDate;
 
 					// Connect the help button with its functionality.
 					$("#help").click(function() {
@@ -611,7 +611,8 @@
 				    
 					
 					function setEndDateValue(value) {
-						endDateValue = value;
+						endDateAsDate = value;
+						endDateValue = value.toString();
 					}
 					
 					/**
@@ -793,6 +794,9 @@
 							var duration = -1;
 							var regimenCycles = -1;
 							
+							// This is the duration for each 'leg' of an AB pair
+							// E.g., 14 days on A and 14 days on B
+							
 							if(durationIndex == 0) {
 								duration = 2; // days
 							} else if(durationIndex == 1) {
@@ -809,14 +813,14 @@
                             	regimenCycles = 4;
                             }
 							
-						    var millis = duration * regimenCycles * 24 * 60 * 60 * 1000;
+						    var millis = duration * 2 * regimenCycles * 24 * 60 * 60 * 1000;
 						    
 						    var endDateValue = new Date();
 						    endDateValue.setTime(startDate.getTime() + millis);
 						    
 						    $("span.regimenCyclesEndDate").html("<i class=\"icon-arrow-right\"></i>&nbsp;Your study will end on " + endDateValue.toDateString() + ".");
 						    
-						    setEndDateValue(endDateValue.toDateString());
+						    setEndDateValue(endDateValue);
 						}
 					}
 
@@ -1435,9 +1439,37 @@
 							    return;
 							}
 							
-							/* if((endDateAsDate.getMonth() - startDateAsDate.getMonth() + (12 * (DisplayTo.getFullYear() - DisplayFrom.getFullYear()))) {
+							// A trial can not be longer than 12 weeks (84 days)
+							// A simpler version of this is to just disallow the selection
+							// of a two week period with 4 cycles.
+							
+							// First, clear out the time portion of each date
+							
+							startDateAsDate.setUTCHours(0);
+                            startDateAsDate.setUTCMinutes(0);
+                            startDateAsDate.setUTCSeconds(0);
+                            startDateAsDate.setUTCMilliseconds(0);
+							
+                            endDateAsDate.setUTCHours(0);
+                            endDateAsDate.setUTCMinutes(0);
+                            endDateAsDate.setUTCSeconds(0);
+                            endDateAsDate.setUTCMilliseconds(0);
+                            
+							var startTime = startDateAsDate.getTime();
+							var endTime = endDateAsDate.getTime();
+							
+							// Check the difference
+							
+							var eightyFourDaysInMillis = 84 * 24 * 60 * 60 * 1000;
+							
+							if((endTime - startTime) > eightyFourDaysInMillis) {
 								
-							} */
+								alert(endTime - startTime);
+								
+								alertUser("Invalid Trial Length",
+                                "A trial cannot be longer than 12 weeks. Please choose a shorter period length or a fewer number of cycles.");
+                                return;
+							} 
 							
 							startDate = startDate + " 00:00:00";
 
@@ -1694,7 +1726,7 @@
 									"username" : username,
 									"class_urn" : CLASS_ID,
 									"campaign_urn" : CAMPAIGN_ID,
-									"survey_id_map" : [
+									"survey_prompt_map" : [
 									    {
 									    	"survey_id": MAIN_SURVEY_ID,
 									        "prompt_ids":[ promptIds ] 
@@ -1708,11 +1740,9 @@
 									"surveys" : JSON.stringify(surveyResponses)
 								};
 								
-                                alert(JSON.stringify(parameters));
- 
 								// Make the request.
-							/* 	$.post("/app/campaign/assign", parameters,
-										success).fail(failure); */
+							 	$.post("/app/campaign/assign", parameters,
+										success).fail(failure); 
 							}
 						} catch (e) {
 							alertUser("Error",
