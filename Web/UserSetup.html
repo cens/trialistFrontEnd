@@ -1,13 +1,10 @@
 <!DOCTYPE HTML>
-<html lang="en">
-  
+<html>
   <head>
-    <!-- The META information for parsing this file. -->
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--  The above meta tag must immediately follow the head element (no empty newlines) for IE7 to render in 'standards mode  -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    
-    <!--<meta http-equiv="X-UA-Compatible" content="IE=8"> Force IE8 Mode because IE9 mode is unusable -->
     
     <!-- The title at the top of the page. -->
     <title>Trialist Setup</title>
@@ -384,7 +381,6 @@
                       <li>A daily question about problems moving your bowels.</li>
                     </ul>
                    </div>
-               
                 
                 <hr />
                 
@@ -569,6 +565,7 @@
 					// function
 					var endDateValue;
 					var endDateAsDate;
+					var startDateAsDate;
 
 					// Connect the help button with its functionality.
 					$("#help").click(function() {
@@ -617,9 +614,10 @@
 					}
 				    
 					
-					function setEndDateValue(value) {
-						endDateAsDate = value;
-						endDateValue = value.toString();
+					function setDateValues(start, end) {
+						endDateAsDate = new Date(end);
+						startDateAsDate = new Date(start);
+						endDateValue = end.toString();
 					}
 					
 					/**
@@ -827,7 +825,7 @@
 						    
 						    $("span.regimenCyclesEndDate").html("<i class=\"icon-arrow-right\"></i>&nbsp;Your study will end on " + endDateValue.toDateString() + ".");
 						    
-						    setEndDateValue(endDateValue);
+						    setDateValues(startDate, endDateValue);
 						}
 					}
 
@@ -1433,7 +1431,7 @@
 										"Please choose a start date.");
 								return;
 							}
-							var startDateAsDate = new Date(startDate);
+
 							var today = new Date();
 							today.setUTCHours(0);
 							today.setUTCMinutes(0);
@@ -1701,7 +1699,7 @@
 									var periodLengthRow = '<tr><td>Period Length</td><td>' + durationInDays + ' days</td></tr>';
 									var numberOfCyclesRow = '<tr><td>Number of Cycles</td><td>' + actualRegimenCycles + '</td></tr>';
 									var startDateRow = '<tr><td>Start Date</td><td>' + startDateAsDate.toDateString() + '</td></tr>';
-									var endDateRow = '<tr><td>End Date</td><td>' + endDateValue + '</td></tr></table>';
+									var endDateRow = '<tr><td>End Date</td><td>' + endDateAsDate.toDateString() + '</td></tr></table>';
 									
 									var table = tablePreamble + patientRow + regimenARow + regimenBRow 
 									    + periodLengthRow + numberOfCyclesRow + startDateRow + endDateRow;
