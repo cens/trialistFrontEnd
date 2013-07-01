@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Trialist" basedir="." default="dist">
+<project name="trialist" basedir="." default="dist">
   <property name="web" location="web" />
   <property name="dist" location="dist" />
     
