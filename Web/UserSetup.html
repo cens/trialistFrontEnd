@@ -821,7 +821,7 @@
 						    var millis = duration * 2 * regimenCycles * 24 * 60 * 60 * 1000;
 						    
 						    var endDateValue = new Date();
-						    endDateValue.setTime(startDate.getTime() + millis);
+						    endDateValue.setTime(startDate.getTime() + millis + (startDate.getTimezoneOffset() * 60 * 1000));
 						    
 						    $("span.regimenCyclesEndDate").html("<i class=\"icon-arrow-right\"></i>&nbsp;Your study will end on " + endDateValue.toDateString() + ".");
 						    
@@ -1468,16 +1468,17 @@
 							var eightyFourDaysInMillis = 84 * 24 * 60 * 60 * 1000;
 							
 							if((endTime - startTime) > eightyFourDaysInMillis) {
-								
-								alert(endTime - startTime);
-								
 								alertUser("Invalid Trial Length",
                                 "A trial cannot be longer than 12 weeks. Please choose a shorter period length or a fewer number of cycles.");
                                 return;
 							} 
 							
 							startDate = startDate + " 00:00:00";
-
+							
+							// Account for the local timezone when displaying the dates back to the user.
+							startDateAsDate.setTime(startDateAsDate.getTime() + (startDateAsDate.getTimezoneOffset() * 60 * 1000));
+							endDateAsDate.setTime(endDateAsDate.getTime() + (endDateAsDate.getTimezoneOffset() * 60 * 1000));
+							
 							// Get the regimen duration value.
 							var regimenDuration = $("#regimenDuration").val();
 							if (regimenDuration === null) {
