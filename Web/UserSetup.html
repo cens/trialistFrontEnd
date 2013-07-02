@@ -74,6 +74,7 @@
          */
         function redirectToLogin() {
             <!--
+            document.cookie = "trialist_redirect=/trialist; path=/";
             document.location = "/";
             //-->
         }
@@ -111,7 +112,10 @@
         // doesn't exist, we will be redirected to the homepage before any of
         // the UI elements are rendered.
         getAuthToken();
-    
+        
+        // Expire the redirect cookie once a successful login occurs.
+        document.cookie = "trialist_redirect=/trialist; expires=-1; path=/";
+        
         // Install the Wicked Good XPath library.
         wgxpath.install();
     </script>
