@@ -308,14 +308,14 @@
 				<div class="well" style="margin: 0px;">
                     
 					<form class="form-horizontal" action="#">
-						<div class="control-group" title="A treatment or treatments you will use in your personalized trial.">
-							<label class="control-label">Regimen A:</label>
+						<div class="control-group">
+							<label class="control-label"><span class="dotted_underline" title="A treatment or treatments to be used in the personalized trial.">Regimen A:</span></label>
 							<div id="regimenA" class="controls"></div>
 						</div>
 					</form>
 					<form class="form-horizontal" action="#">
-						<div class="control-group" title="Treatment or treatments you will compare against your Regimen A selections.">
-							<label class="control-label">Regimen B:</label>
+						<div class="control-group">
+							<label class="control-label"><span class="dotted_underline" title="Treatment or treatments to be compared to the Regimen A selections.">Regimen B:</span></label>
 							<div id="regimenB" class="controls"></div>
 						</div>
 					</form>
@@ -323,8 +323,8 @@
 					<hr/>
 					
 					<form class="form-horizontal" action="#">
-						<div class="control-group" title="The day you start your personalized trial.">
-							<label class="control-label">Study Start Date:</label>
+						<div class="control-group">
+							<label class="control-label"><span class="dotted_underline" title="The day the personalized trial starts.">Study Start Date:</span></label>
 							<div class="controls">
 								<div class="input-append date datepicker" id="startDatePicker"
 									data-date-format="yyyy-mm-dd">
@@ -336,8 +336,8 @@
 					</form>
 					
 					<form class="form-horizontal" action="#">
-						<div class="control-group" title="The number of weeks you will spend on each Regimen. At the end of the period you will be prompted to switch to the next Regimen.">
-							<label class="control-label">Period Length:</label>
+						<div class="control-group">
+							<label class="control-label"><span class="dotted_underline" title="The number of weeks to be spent on each Regimen. At the end of the period, a switch to the next Regimen occurs.">Period Length:</span></label>
 							<div class="controls">
 								<select id="regimenDuration">
 								</select>
@@ -345,8 +345,8 @@
 						</div>
 					</form>
 					<form class="form-horizontal" action="#">
-						<div class="control-group" title="The number of times you complete a full cycle (one cycle is Regimen A followed by Regimen B, or Regimen B followed by Regimen A).">
-							<label class="control-label">Number of Cycles:</label>
+						<div class="control-group">
+							<label class="control-label"><span class="dotted_underline" title="The number of times for a full cycle to complete (one cycle is Regimen A followed by Regimen B, or Regimen B followed by Regimen A).">Number of Cycles:</span></label>
 							<div class="controls">
 								<select id="regimenCycles">
 								</select>
@@ -483,9 +483,10 @@
 					}
 					
 					 $(document).ready(function () {
-		                $("div").tooltip({
+		                $("span").tooltip({
 		                  'selector': '',
-		                  'placement': 'left'
+		                  'placement': 'top',
+		                  'trigger' : 'hover'
 		                });
 			        });
 					
@@ -602,12 +603,12 @@
 					$('#startDatePicker').change(updateCycles);
 
 					// Setup the regimen duration.
-					$("#regimenDuration").tooltip({
-						position : "center right",
+					/* $("#regimenDuration").tooltip({
+						position : "center top",
 						offset : [ -2, 10 ],
 						effect : "fade",
 						opacity : 0.7
-					});
+					}); */
 					$('#regimenDuration').change(updateCycles);
 					$('#regimenCycles').change(updateCycles);
 
