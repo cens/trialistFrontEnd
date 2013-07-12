@@ -306,19 +306,6 @@
 			    
 			    
 				<div class="well" style="margin: 0px;">
-
-					<div class="row" style="margin: 10px; border: 1px solid #738077; padding: 5px;">
-					    
-						<p><i class="icon-arrow-right"></i> Will
-							there be any pain treatments that you will continue to use
-							throughout the trial that will not be a part of the trial? If so,
-							please speak to the research assistant. They will record the pain
-							treatments you will continue to use throughout the trial in a
-							separate form.</p>
-					</div>
-
-                    
-                    <hr/>
                     
 					<form class="form-horizontal" action="#">
 						<div class="control-group" title="A treatment or treatments you will use in your personalized trial.">
@@ -533,16 +520,24 @@
 					// Create a list of allowed regimen combinations. Each index in the
 					// list corresponds to the key for that choice. Each value is an array
 					// of allowed keys.
+					// 0 - No treatment
+                    // 1 - Tylenol
+                    // 2 - NSAID
+                    // 3 - Codeine
+                    // 4 - Tramadol
+                    // 5 - Hydrocodone
+                    // 6 - Oxycodone
+                    // 7 - CAM
 					var ALLOWED_REGIMEN_COMBINATIONS = [
+							[ ],
+							[ "2", "4", "7" ],
 							[ "1", "2", "3", "4", "5", "6", "7" ],
-							[ "0", "2", "4", "7" ],
-							[ "0", "1", "2", "3", "4", "5", "6", "7" ],
-							[ "0", "2", "7" ],
-							[ "0", "1", "2", "7" ],
-							[ "0", "2", "7" ],
-							[ "0", "2", "7" ],
-							[ "0", "1", "2", "3", "4", "5", "6" ] ];
-
+							[ "2", "7" ],
+							[ "1", "2", "7" ],
+							[ "2", "7" ],
+							[ "2", "7" ],
+							[ "1", "2", "3", "4", "5", "6" ] ];
+				
 					// The Trialist class' unique identifier.
 					var CLASS_ID = "urn:class:Trialist";
 
@@ -1232,7 +1227,14 @@
 							properties, spanIdPrefix) {
 						var currProperty = null;
 						var result = [];
+						var first = true;
+						
 						while ((currProperty = nextElement(properties)) !== null) {
+							if(first === true && spanIdPrefix === 'A') {
+								first = false;
+								continue;
+							}
+							
 							// XPath to the key element.
 							var keyElements = evaluateXpath(root, currProperty,
 									'./key');
