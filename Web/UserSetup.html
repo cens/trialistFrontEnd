@@ -20,6 +20,7 @@
     
     <!-- jQuery stuff -->
     <script src="js/jquery-1.9.0.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
     
     <!-- Less stuff -->
     <script src="js/less-1.3.3.min.js"></script>
@@ -74,7 +75,8 @@
          */
         function redirectToLogin() {
             <!--
-            document.cookie = "trialist_redirect=/trialist; path=/";
+            // document.cookie = "trialist_redirect=/trialist; path=/";
+            $.cookie('trialist_redirect', '/trialist', {path: '/'});
             document.location = "/";
             //-->
         }
@@ -114,7 +116,8 @@
         getAuthToken();
         
         // Expire the redirect cookie once a successful login occurs.
-        document.cookie = "trialist_redirect=/trialist; expires=-1; path=/";
+        // document.cookie = "trialist_redirect=/trialist; expires=-1; path=/";
+        $.cookie('trialist_redirect', null, {path: '/'});
         
         // Install the Wicked Good XPath library.
         wgxpath.install();
