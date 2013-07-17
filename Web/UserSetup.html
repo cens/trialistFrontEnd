@@ -75,7 +75,6 @@
          */
         function redirectToLogin() {
             <!--
-            // document.cookie = "trialist_redirect=/trialist; path=/";
             $.cookie('trialist_redirect', '/trialist', {path: '/'});
             document.location = "/";
             //-->
@@ -105,7 +104,7 @@
                 // Send the user to the login page.
                 redirectToLogin();
             }
-            
+                        
             // Return whatever we have as the authentication token.
             return authToken;
         }
@@ -115,12 +114,15 @@
         // the UI elements are rendered.
         getAuthToken();
         
-        // Expire the redirect cookie once a successful login occurs.
-        // document.cookie = "trialist_redirect=/trialist; expires=-1; path=/";
-        $.cookie('trialist_redirect', null, {path: '/'});
-        
         // Install the Wicked Good XPath library.
         wgxpath.install();
+    </script>
+    <script type="text/javascript">
+        // Expire the redirect cookie once a successful login occurs.
+        // This cannot happen in the above script tag because the browser 
+        // can continue executing that JavaScript after the redirect to /
+        // has occurred.
+        $.cookie('trialist_redirect', '/trialist', { path: '/', expires: new Date() });
     </script>
 	<div class="container">
 		<div style="box-shadow: 1px 0px 4px 0 #E0E0E0;">
@@ -322,6 +324,18 @@
 							<div id="regimenB" class="controls"></div>
 						</div>
 					</form>
+					
+					<!--  
+					  
+					  New question about existing treatment goes here.
+					   
+					<form class="form-horizontal" action="#">
+                        <div class="control-group">
+                            <label class="control-label"><span class="dotted_underline" title="A treatment or treatments to be used in the personalized trial.">Regimen A:</span></label>
+                            <div id="regimenA" class="controls"></div>
+                        </div>
+                    </form>
+					 -->
 					
 					<hr/>
 					
