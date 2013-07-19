@@ -325,17 +325,24 @@
 						</div>
 					</form>
 					
-					<!--  
-					  
-					  New question about existing treatment goes here.
+					<hr/>
 					   
 					<form class="form-horizontal" action="#">
                         <div class="control-group">
-                            <label class="control-label"><span class="dotted_underline" title="A treatment or treatments to be used in the personalized trial.">Regimen A:</span></label>
-                            <div id="regimenA" class="controls"></div>
+                        <div class="controls">
+                            <span>Do you intend to prescribe or continue any pain treatments in addition to the ones selected above?</span>
+                            <div>
+	                            <label class="radio inline">
+	                            <input type="radio" name="extraTreatmentRadios" id="extraTreatmentRadios1" value="yes">Yes
+	                            </label>
+	                            <label class="radio inline">
+	                            <input type="radio" name="extraTreatmentRadios" id="extraTreatmentRadios2" value="no">No
+	                            </label>
+	                       </div>
+	                       <div class="row" style="margin: 10px;"><span class="extraTreatmentNotification"></span></div>
+                            </div>
                         </div>
                     </form>
-					 -->
 					
 					<hr/>
 					
@@ -401,7 +408,7 @@
 	                <form class="form-horizontal" action="#">
 	                        <span class="help-block" style="color: #000000;">
 	                       Pain medicines can sometimes affect our thinking or concentration. Please select one of the 
-	                       following questions about your thinking or concentration that you will want to track every day.
+	                       following questions about your thinking or concentration that to track every day.
 	                        </span>
 	
 	                        <div style="padding: 20px;">
@@ -410,6 +417,7 @@
 	                        </div>
 	                </form>
                 </div>
+              
 
                 </div>
 
@@ -426,7 +434,7 @@
 				<div class="well" style="padding: 10px;">
                    					
 					
-					<div style="padding: 10px;">
+<!-- 					<div style="padding: 10px;">
 					<form class="form-horizontal" action="#">
 						
 						<label class="checkbox"> <input id="neuropathicPain"
@@ -436,6 +444,25 @@
 						
 					</form>
 					</div>
+ -->					
+		        <form class="form-horizontal" action="#">
+
+                   <div style="margin-left: 20px;">
+                       <div><span>Does the patient have pain accompanied by burning, pins and needles, 
+                            itching, or a sensitive or unpleasant sensation on the skin?</span></div>
+                       <div>
+                           <label class="radio inline">
+                           <input type="radio" name="neuropathicRadios" id="neuropathicRadios1" value="yes">Yes
+                           </label>
+                           <label class="radio inline">
+                           <input type="radio" name="neuropathicRadios" id="neuropathicRadios2" value="no">No
+                           </label>
+                      </div>
+
+                 </div>
+               </form>
+                 
+					
 				</div>
 
 				<div class="row-fluid">
@@ -449,9 +476,6 @@
                 
 				<div class="row-fluid"
 					style="background: #808080; padding-bottom: 3px; margin: 0px;">
-					<!-- <div class="pull-left" style="padding: 25px 25px 25px 5px;">
-                        <p style="color: white;"><i class="icon-question-sign" style="padding-left: 5px;"></i><a href="mailto:trialist-setup-help@ohmage.org" style="color: white;">trialist-setup-help@ohmage.org</a>.</p>
-                    </div> -->
 					<div class="pull-right">
 					    <img src="images/omh_logo-white.png" style="height: 91px; width: 225px;" alt="Open mHealth Logo" />
 					</div>
@@ -619,15 +643,10 @@
 					$('#startDatePicker').datepicker();
 					$('#startDatePicker').change(updateCycles);
 
-					// Setup the regimen duration.
-					/* $("#regimenDuration").tooltip({
-						position : "center top",
-						offset : [ -2, 10 ],
-						effect : "fade",
-						opacity : 0.7
-					}); */
 					$('#regimenDuration').change(updateCycles);
 					$('#regimenCycles').change(updateCycles);
+					$('#extraTreatmentRadios1').change(showExtraTreatmentText);
+					$('#extraTreatmentRadios2').change(showExtraTreatmentText);
 
 					// Populate the page's UI elements.
 					try {
@@ -851,6 +870,15 @@
 						    $("span.regimenCyclesEndDate").html("<i class=\"icon-arrow-right\"></i>&nbsp;Your study will end on " + endDateValue.toDateString() + ".");
 						    
 						    setDateValues(startDate, endDateValue);
+						}
+					}
+					
+					function showExtraTreatmentText() {
+						if($("#extraTreatmentRadios1").is(":checked")) {
+							$("span.extraTreatmentNotification").html("<i class=\"icon-arrow-right\"></i>&nbsp;Please communicate this information to the RA or RN.");	
+						} 
+						else {
+							$("span.extraTreatmentNotification").html("");
 						}
 					}
 
@@ -1614,7 +1642,8 @@
 							// If it is checked, set the flag and add it to the list of
 							// survey IDs.
 							var isNeuropathicPain = 0;
-							if ($("#neuropathicPain").is(":checked")) {
+							 
+						    if ($("#neuropathicRadios1").is(":checked")) {	
 								isNeuropathicPain = 1;
 								for(var i = 0; i < PROMPT_IDS_NEUROPATHIC_PAIN.length; i++) {
 									promptIds.push(PROMPT_IDS_NEUROPATHIC_PAIN[i]);	
