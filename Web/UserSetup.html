@@ -601,6 +601,7 @@
 					var PROMPT_ID_COGNITIVE_FUNCTION = "cognitiveFunction";
 					var PROMPT_ID_NEUROPATHIC_PAIN_TAKEN = "neuropathicPainTaken";
 					var PROMPT_ID_USER_SELECTED = "userSelected";
+					var PROMPT_ID_EXTRA_TREATMENT = "extraTreatment";
 					
 					// The list of checkboxes for each regimen.
 					var CHECKBOX_REGIMEN_A = [];
@@ -1483,6 +1484,18 @@
 										"The first and second regimen lists are the same.");
 								return;
 							}
+							
+	                        // Make sure yes or no was selected 
+                            var isPrescribingAdditionalOrContinuingTreatments = 0;
+                             
+                            if($("#extraTreatmentRadios1").is(":checked")) {  
+                                isPrescribingAdditionalOrContinuingTreatments = 1;
+                                
+                            } else if( ! $("#extraTreatmentRadios2").is(":checked")) {
+                                alertUser("No Extra Treatment Option Selected",
+                                "Please choose Yes or No for prescribing or continuing pain treatments.");
+                                return;
+                            }
 
 							// Get the start date.
 							var startDate = $("#startDate").val();
@@ -1586,8 +1599,6 @@
 							
 							var randomsAsText = randomsArray.toString();
 							
-							randoms.reverse();
-							
 							// Pad with zeros to make the binary math work
 							
 							if(randoms.length < 3) {
@@ -1639,8 +1650,7 @@
 							}
 							promptIds.push(cognitiveFunction);
 							
-							// If it is checked, set the flag and add it to the list of
-							// survey IDs.
+							// Make sure yes or no was selected
 							var isNeuropathicPain = 0;
 							 
 						    if ($("#neuropathicRadios1").is(":checked")) {	
@@ -1648,8 +1658,12 @@
 								for(var i = 0; i < PROMPT_IDS_NEUROPATHIC_PAIN.length; i++) {
 									promptIds.push(PROMPT_IDS_NEUROPATHIC_PAIN[i]);	
 								}
+							} else if( ! $("#neuropathicRadios2").is(":checked")) {
+								alertUser("No Neuropathic Pain Option Selected",
+                                "Please choose Yes Or No for the neuropathic pain option.");
+							    return;
 							}
-
+						    
 							// Build the survey response.
 							var surveyResponse = {
 								"survey_key" : randomUUID(),
@@ -1699,6 +1713,10 @@
 											"prompt_id" : PROMPT_ID_NEUROPATHIC_PAIN_TAKEN,
 											"value" : isNeuropathicPain
 										},
+										{
+                                            "prompt_id" : PROMPT_ID_EXTRA_TREATMENT,
+                                            "value" : isPrescribingAdditionalOrContinuingTreatments
+                                        },
 										{
                                             "prompt_id" : PROMPT_ID_USER_SELECTED,
                                             "value" : username
