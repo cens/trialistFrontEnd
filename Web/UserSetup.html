@@ -529,7 +529,7 @@
 					// The list of required survey IDs.
 					var REQUIRED_PROMPT_IDS = [ 'averagePainIntensity',
 							'enjoymentOfLife', 'generalActivity', 'fatiguePrompt', 
-							'drowsinessPrompt', 'constipationPrompt'];
+							'drowsinessPrompt', 'constipationPrompt', 'sleepDisturbancePrompt', 'notesAboutToday'];
 					
 					var PROMPT_IDS_COGNITIVE_FUNCTION = [
 							'cognitiveFunctionSlowThinkingPrompt',
@@ -540,8 +540,8 @@
 					var PROMPT_IDS_NEUROPATHIC_PAIN = ['experiencePain',
 					        'painSharpness', 'painHotness', 'painSensitivity'];
 					
-					var SURVEY_ID_SLEEP = 'sleep';
-					var PROMPT_ID_SLEEP = 'sleepDisturbancePrompt';
+					var SURVEY_ID_ADHERENCE = 'adherence';
+					var PROMPT_ID_ADHERENCE = 'adherencePrompt';
 					
 					// The list of optional survey ID elements, which should be added when
 					// reading the campaign's contents.
@@ -1804,8 +1804,8 @@
 									        "prompt_ids": promptIds  
 									    },
 									    {
-									    	"survey_id" : SURVEY_ID_SLEEP,
-									    	"prompt_ids" : [ PROMPT_ID_SLEEP ]
+									    	"survey_id" : SURVEY_ID_ADHERENCE,
+									    	"prompt_ids" : [ PROMPT_ID_ADHERENCE ]
 									    }
 									 	
 									]),
