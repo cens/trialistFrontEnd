@@ -1,0 +1,23 @@
+html {
+  background-color: #FFFFFF;
+}
+body {
+  background: transparent;
+}
+.container-fluid {
+  padding: 5px;
+  background: #B7E3E4;
+}
+.container div .well .form-horizontal .control-group .controls select.select-primary-outcome {
+  width: 100%;
+}
+.container-fluid.container-fluid-footer {
+  padding: 20px;
+  background: #FAA61A;
+}
+.light-grey {
+  background-color: #808080;
+}
+.dotted_underline {
+   border-bottom: 1px dotted;
+}
