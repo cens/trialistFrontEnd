@@ -102,7 +102,26 @@
                 // Send the user to the login page.
                 redirectToLogin();
             }
-                        
+            
+            // Check to see if it is a valid auth token
+            
+            var failure = function() {
+                redirectToLogin();
+            }
+
+            var success = function(data) { 
+            	if (data['result'] === "failure") {
+            		redirectToLogin();
+            	}
+            }
+            
+            var parameters = {
+                "client" : "TrialistWeb",
+            };
+      
+            $.post("/app/user/whoami", parameters, success)
+                    .fail(failure);
+            
             // Return whatever we have as the authentication token.
             return authToken;
         }
