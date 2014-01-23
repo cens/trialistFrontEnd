@@ -737,7 +737,8 @@
 					function isIE() {
 						return (window.DOMParser === undefined) 
 						  || (navigator.userAgent.indexOf("MSIE 9") != -1)
-						  || (navigator.userAgent.indexOf("MSIE 10") != -1);
+						  || (navigator.userAgent.indexOf("MSIE 10") != -1)
+						  || (navigator.userAgent.indexOf("Trident/7.0") != -1); // huge hack for IE 11
 					}
 					
 					
