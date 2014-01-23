@@ -73,7 +73,7 @@
          */
         function redirectToLogin() {
             <!--
-            $.cookie('trialist_redirect', '/trialist', {path: '/'});
+            $.cookie('trialist_redirect', '/trialist_mock', {path: '/'});
             document.location = "/web";
             //-->
         }
@@ -138,7 +138,7 @@
         // This cannot happen in the above script tag because the browser 
         // can continue executing that JavaScript after the redirect to "/"
         // has occurred.
-        $.cookie('trialist_redirect', '/trialist', { path: '/', expires: new Date() });
+        $.cookie('trialist_redirect', '/trialist_mock', { path: '/', expires: new Date() });
     </script>
 
 	<div class="container">
