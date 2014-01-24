@@ -363,6 +363,8 @@
 							<label class="control-label"><span class="dotted_underline" title="The number of weeks to be spent on each Regimen. At the end of the period, a switch to the next Regimen occurs.">Period Length:</span></label>
 							<div class="controls">
 								<select id="regimenDuration">
+								    <option value="1" data-value="7">7 days</option>
+                                    <option value="2" data-value="14">14 days</option>
 								</select>
 							</div>
 						</div>
@@ -1068,13 +1070,24 @@
 										// Populate the regimen HTML select.
 										setupRegimenLists(xmlObject,
 												setupSurvey, regimenA, regimenB)
-
+										
+									    // The regimen duration drop-down is now populated statically.
+									    // The campaign XML for urn:campaign:trialist contains three 
+									    // regimenDurations. For internal testing, we use all three.
+									    // For real trials, the 2 day option is omitted. The campaign
+									    // is shared between internal testing and real trials in order
+									    // to avoid having to have a "perform internal testing" checkbox
+									    // in the phone app.
+									    
 										// Populate the duration.
-										createSelectOptionsFromPromptProperties(
-												xmlObject, setupSurvey,
-												PROMPT_ID_REGIMEN_DURATION,
-												regimenDuration);
-
+										// createSelectOptionsFromPromptProperties(
+										//		xmlObject, setupSurvey,
+										//		PROMPT_ID_REGIMEN_DURATION,
+										//		regimenDuration);
+								        
+										// Force a selection by the user
+									    regimenDuration.prop('selectedIndex', -1);
+										
 										// Populate the number of cycles.
 										createSelectOptionsFromPromptProperties(
 												xmlObject, setupSurvey,
