@@ -35,6 +35,7 @@
 
     <!-- CSS Stuff -->
     <link href="css/UserSetup.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="css/viz.css" media="screen" rel="stylesheet" type="text/css" />
 
   </head>
 
@@ -65,10 +66,8 @@
          * Redirects the user to the login page.
          */
         function redirectToLogin() {
-            <!--
             $.cookie('trialist_redirect', '/trialist', {path: '/'});
-            //document.location = "/web";
-            //-->
+            document.location = "/web";
         }
 
         /**
@@ -104,6 +103,17 @@
         // doesn't exist, we will be redirected to the homepage before any of
         // the UI elements are rendered.
         getAuthToken();
+
+// Connect the logout button with its functionality.
+$(document).ready(function(){
+  $("#logout").click(function() {
+    $.post("/app/user/logout", {
+      "client" : "Trialist"}, 
+      function() {
+       window.location = "/";
+    });
+  });
+});
 
     </script>
 
@@ -175,8 +185,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <svg
+   class="hidden"
    id="svg"
-   style="display:none; margin-left:-30px"
+   style="display:none; background:white;"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -185,7 +196,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    version="1.2"
    width="765"
-   height="1900">
+   height="1458">
   <defs
      id="defs11862">
 
@@ -3359,8 +3370,10 @@
        y="1409.5514"
        id="tspan11034">better</tspan></text>
 </svg>
-
-<textarea style="display:none;" id="text-view" readonly="false"></textarea>
+<div id="outcome-summary-wrapper" class="hidden">
+  <button id="outcome-summary-button">Outcome Summary</button>
+</div>
+<textarea class="hidden" id="text-view" readonly="false"></textarea>
 <script type="text/javascript" src="js/visualization.js"></script>
 
 </div>

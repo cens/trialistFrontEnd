@@ -1,0 +1,16 @@
+#outcome-summary-wrapper{
+ text-align:center;
+ padding:20px;
+ width:725px;
+ background:#fff;
+}
+
+#app textarea{
+  font-family:monospace;
+  border:none;
+  padding:50px;
+  width:667px;
+  height:1000px;
+  display:block;
+  background:#fff;
+}
