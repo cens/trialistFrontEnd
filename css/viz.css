@@ -1,3 +1,14 @@
+#choose-patient{
+margin:20px;
+}
+
+.well{
+  padding:0;
+}
+
+#app{
+}
+
 #outcome-summary-wrapper{
  text-align:center;
  padding:20px;
@@ -5,7 +16,8 @@
  background:#fff;
 }
 
-#app textarea{
+#app pre{
+  padding-left:150px;
   font-family:monospace;
   border:none;
   padding:50px;

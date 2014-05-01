@@ -1,0 +1,23 @@
+#alertModal{
+  display:none;
+}
+
+.print-hide{
+  display:none;
+}
+
+#outcome-summary-button{
+  display:none;
+}
+
+*{
+ border:none !important;
+ -webkit-box-shadow:none;
+ box-shadow:none;
+}
+
+#text-view{
+  page-break-before: always; 
+ margin-left: 150px;
+}
+
