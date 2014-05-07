@@ -2,3 +2,7 @@
 .settings
 .classpath
 dist
+trialist-cljs/classes
+trialist-cljs/target
+trialist-cljs/test
+trialist-cljs/README.md

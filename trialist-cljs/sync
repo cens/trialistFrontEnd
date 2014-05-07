@@ -1,0 +1,4 @@
+#cp resources/public/js/main.js trialist-front-end/js/visualization.js 
+#rsync -avz trialist-front-end/* ohmage:/var/www/html/trialist/
+cp resources/public/js/main.js /var/www/trialist-viz-test/js/visualization.js
+echo "copied js file"
