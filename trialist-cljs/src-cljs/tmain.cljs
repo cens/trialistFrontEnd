@@ -32,7 +32,7 @@
            (load-data auth-token patient))))
 
   (dom/listen! (sel1 :#outcome-summary-button) :click
-    (fn [evt] 
+    (fn [evt]
       (let [svg (sel1 :#svg)
 	    btn (sel1 :#outcome-summary-button)
 	    txt (dom/text btn)
@@ -251,7 +251,7 @@
               (dom/append! g line))))
    (dom/append! (sel1 :#svg) g)))
 
-(def conversion-rates   
+(def conversion-rates
      {:cognitiveFunctionWorkingHarderPrompt 2.5
       :cognitiveFunctionFoggyThinkingPrompt 2.5
       :fatiguePrompt 2.5
@@ -260,7 +260,7 @@
 
 (defn ave [symptom reg]
   (let [dat (filter (fn [i] (= reg (get i :regimen))) @data)
-        dat (map (fn [i] (get i symptom)) dat) 
+        dat (map (fn [i] (get i symptom)) dat)
 	ave (/ (reduce + dat) (count dat))
 	rate (get conversion-rates symptom)
         rate (if rate rate 1)
@@ -421,9 +421,6 @@
       (summary "sleep_problems")
       (summary "neuropathic_pain"))
 
-(defn debug []
-  (dom/append! (sel1 :#debug) (JSON/stringify (clj->js @results) nil 2)))
-
 (declare text)
 
 (defn render []
@@ -447,7 +444,6 @@
   (dom/set-text! (sel1 :#msg) "Rendering Graph 6...")
   (graph-6)
   (text)
-  ;(debug)
   (remove! :#choose-patient)
   (doseq [el (sel :.hidden)]
   (dom/remove-class! el "hidden"))
@@ -458,7 +454,7 @@
 (dom/set-text! (sel1 :#text-view)(str
 "ANALGESIA
 =================================================================
-**VAS 0-10 (lower scores denote better outcomes)**
+**Scored 0-10 (lower scores denote better outcomes)**
 
 *Treatment* ---------------------------------------- *A*  *B*
 
@@ -479,10 +475,9 @@ _________________________________________________________________
 
 SIDE EFFECTS
 =================================================================
-**VAS 0-10 (lower scores denote better outcomes)**
+**Scored 0-10 (lower scores denote better outcomes)**
 
 *Treatment* ---------------------------------------- *A*  *B*
-
 Thinking problems: --------------------------------- 3/10 3/10
 
 Constipation: -------------------------------------- " (rnd-ave :constipationPrompt "A") "/10 " (rnd-ave :constipationPrompt "B") "/10
@@ -495,7 +490,7 @@ _________________________________________________________________
 
 INTERFERENCE WITH ACTIVITIES OF DAILY LIVING
 =================================================================
-**VAS 0-10 (lower scores denote better outcomes)**
+**Scored 0-10 (lower scores denote better outcomes)**
 
 *Treatment* ---------------------------------------- *A*  *B*
 
