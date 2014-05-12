@@ -19494,6 +19494,8 @@ trialist.tmain.conversion_rates = cljs.core.PersistentArrayMap.fromArray([new cl
   return 2.5 * (a - 1)
 }, new cljs.core.Keyword(null, "fatiguePrompt", "fatiguePrompt", 1744398973), function(a) {
   return 2.5 * (a - 1)
+}, new cljs.core.Keyword(null, "constipationPrompt", "constipationPrompt", 1329778209), function(a) {
+  return 2.5 * (a - 1)
 }, new cljs.core.Keyword(null, "drowsinessPrompt", "drowsinessPrompt", 619474649), function(a) {
   return 2 * (a - 1)
 }, new cljs.core.Keyword(null, "sleepDisturbancePrompt", "sleepDisturbancePrompt", 2006915117), function(a) {
@@ -19563,6 +19565,8 @@ trialist.tmain.remove_neuro = function() {
   trialist.tmain.remove_BANG_.call(null, new cljs.core.Keyword(null, "#np-pain-bars1", "#np-pain-bars1", 3668927700));
   trialist.tmain.remove_BANG_.call(null, new cljs.core.Keyword(null, "#np-pain-bars2", "#np-pain-bars2", 3668927701));
   trialist.tmain.remove_BANG_.call(null, new cljs.core.Keyword(null, "#np-pain-bars3", "#np-pain-bars3", 3668927702));
+  trialist.tmain.remove_BANG_.call(null, new cljs.core.Keyword(null, "#np-pain-bars4", "#np-pain-bars4", 3668927703));
+  trialist.tmain.remove_BANG_.call(null, new cljs.core.Keyword(null, "#np-pain-bars5", "#np-pain-bars5", 3668927704));
   trialist.tmain.remove_BANG_.call(null, new cljs.core.Keyword(null, "#np-pain-outcome", "#np-pain-outcome", 507535989));
   return trialist.tmain.remove_BANG_.call(null, new cljs.core.Keyword(null, "#np-pain-summary", "#np-pain-summary", 4051370697))
 };

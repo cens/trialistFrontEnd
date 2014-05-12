@@ -256,6 +256,7 @@
      {:cognitiveFunctionWorkingHarderPrompt (fn [v] (* 2.5 (- v 1)))
       :cognitiveFunctionFoggyThinkingPrompt (fn [v] (* 2.5 (- v 1)))
       :fatiguePrompt (fn [v] (* 2.5 (- v 1)))
+      :constipationPrompt (fn [v] (* 2.5 (- v 1)))
       :drowsinessPrompt (fn [v] (* 2 (- v 1)))
       :sleepDisturbancePrompt (fn [v] (* 2.5 (- 5 v))) })
 
@@ -349,6 +350,8 @@
   (remove! :#np-pain-bars1)
   (remove! :#np-pain-bars2)
   (remove! :#np-pain-bars3)
+  (remove! :#np-pain-bars4)
+  (remove! :#np-pain-bars5)
   (remove! :#np-pain-outcome)
   (remove! :#np-pain-summary))
 
