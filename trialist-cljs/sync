@@ -1,4 +1,3 @@
-#cp resources/public/js/main.js trialist-front-end/js/visualization.js 
-#rsync -avz trialist-front-end/* ohmage:/var/www/html/trialist/
-cp /home/maku/trialist-front-end/trialist-cljs/resources/public/js/main.js /var/www/trialist-viz-test/js/visualization.js
+scp ~/Projects/trialist-front-end/trialist-cljs/resources/public/js/main.js trialist.omh.io:/var/www/trialist-viz-test/js/visualization.js
+scp ~/Projects/trialist-front-end/results.html trialist.omh.io:/var/www/trialist-viz-test/results.html
 echo "copied js file"

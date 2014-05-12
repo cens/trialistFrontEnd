@@ -6,7 +6,11 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [cljs-ajax "0.2.3"]
                  [compojure "1.1.5"]
-                 [org.clojure/clojurescript "0.0-2173"]
+                 [hiccup "1.0.4"]
+                 [garden "1.1.4"]
+                 [org.clojure/clojurescript "0.0-2030"]
+                 [jayq "2.5.0"]
+                 [hickory "0.5.3"]
                  [prismatic/dommy "0.1.2"]]
   :plugins [[lein-ring "0.8.5"]
             [lein-cljsbuild "1.0.0"]]
@@ -14,7 +18,7 @@
   :profiles {:dev {:dependencies [[ring-mock "0.1.5"]]}}
   :cljsbuild {
     :builds [{
-        :notify-command ["/home/maku/trialist-front-end/trialist-cljs/sync"]
+        :notify-command ["/Users/maku/Projects/trialist-front-end/trialist-cljs/sync"]
         ; ClojureScript source directory:
         :source-paths ["src-cljs"]
         ; The standard ClojureScript compiler options:

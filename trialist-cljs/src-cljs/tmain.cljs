@@ -15,7 +15,6 @@
  (if-let [item (sel1 selector)]
    (dom/remove! item)))
 
-;(def url "https://trialist.omh.io/app/")
 (def url "/app/")
 (def client "preempt-viz")
 (declare signin)
@@ -251,11 +250,13 @@
               (dom/append! g line))))
    (dom/append! (sel1 :#svg) g)))
 
+;Fatigue, Drowsiness, Thinking Problems, Constipation conversion
+
 (def conversion-rates
-     {:cognitiveFunctionWorkingHarderPrompt 2.5
-      :cognitiveFunctionFoggyThinkingPrompt 2.5
-      :fatiguePrompt 2.5
-      :drowsinessPrompt 2.0
+     {:cognitiveFunctionWorkingHarderPrompt (fn [v] (* 2.5 (- v 1)))
+      :cognitiveFunctionFoggyThinkingPrompt (fn [v] (* 2.5 (- v 1)))
+      :fatiguePrompt (fn [v] (* 2.5 (- v 1)))
+      :drowsinessPrompt (fn [v] (* 2 (- v 1)))
       :sleepDisturbancePrompt (fn [v] (* 2.5 (- 5 v))) })
 
 (defn ave [symptom reg]
@@ -345,7 +346,9 @@
 
 (defn remove-neuro []
   (.log js/console "remove-neuro")
-  (remove! :#np-pain-bars)
+  (remove! :#np-pain-bars1)
+  (remove! :#np-pain-bars2)
+  (remove! :#np-pain-bars3)
   (remove! :#np-pain-outcome)
   (remove! :#np-pain-summary))
 
