@@ -32,14 +32,13 @@
 
   (dom/listen! (sel1 :#outcome-summary-button) :click
     (fn [evt]
-      (let [svg (sel1 :#svg)
-	    btn (sel1 :#outcome-summary-button)
-	    txt (dom/text btn)
+      (let [btn (sel1 :#outcome-summary-button)
+	          txt (dom/text btn)
             txt (if (= txt "Outcome Summary")
                     (str "Hide " txt)
                     "Outcome Summary")
             hgt (if (= txt "Outcome Summary") 1458 1900)]
-        (dom/set-style! (sel1 :#svg) :height hgt)
+        (dom/set-style! (sel1 :#svg-wrapper) :height (str hgt "px"))
         (dom/set-text! btn txt))))
 
 (defn signin [username password patient]
@@ -250,8 +249,6 @@
               (dom/append! g line))))
    (dom/append! (sel1 :#svg) g)))
 
-;Fatigue, Drowsiness, Thinking Problems, Constipation conversion
-
 (def conversion-rates
      {:cognitiveFunctionWorkingHarderPrompt (fn [v] (* 2.5 (- v 1)))
       :cognitiveFunctionFoggyThinkingPrompt (fn [v] (* 2.5 (- v 1)))
@@ -451,10 +448,11 @@
   (graph-6)
   (text)
   (remove! :#choose-patient)
-  (doseq [el (sel :.hidden)]
-  (dom/remove-class! el "hidden"))
-  (dom/set-style! (sel1 :#svg) :display "block")
-  #_(dom/set-style! (sel1 :#text-view) :display "block"))
+
+  (dom/remove-class! (sel1 :#svg-wrapper) "hidden")
+  (dom/remove-class! (sel1 :#outcome-summary-wrapper) "hidden")
+  (dom/remove-class! (sel1 :#text-view) "hidden"))
+
 
 (defn text []
 (dom/set-text! (sel1 :#text-view)(str

@@ -19282,10 +19282,9 @@ dommy.core.listen_BANG_.call(null, document.getElementById("choose-patient"), ne
   return trialist.tmain.load_data.call(null, trialist.tmain.auth_token, a)
 });
 dommy.core.listen_BANG_.call(null, document.getElementById("outcome-summary-button"), new cljs.core.Keyword(null, "click", "click", 1108654330), function(a) {
-  document.getElementById("svg");
   a = document.getElementById("outcome-summary-button");
   var b = dommy.core.text.call(null, a), b = cljs.core._EQ_.call(null, b, "Outcome Summary") ? [cljs.core.str("Hide "), cljs.core.str(b)].join("") : "Outcome Summary", c = cljs.core._EQ_.call(null, b, "Outcome Summary") ? 1458 : 1900;
-  dommy.core.set_style_BANG_.call(null, document.getElementById("svg"), new cljs.core.Keyword(null, "height", "height", 4087841945), c);
+  dommy.core.set_style_BANG_.call(null, document.getElementById("svg-wrapper"), new cljs.core.Keyword(null, "height", "height", 4087841945), [cljs.core.str(c), cljs.core.str("px")].join(""));
   return dommy.core.set_text_BANG_.call(null, a, b)
 });
 trialist.tmain.signin = function(a, b, c) {
@@ -19638,20 +19637,9 @@ trialist.tmain.render = function() {
   trialist.tmain.graph_6.call(null);
   trialist.tmain.text.call(null);
   trialist.tmain.remove_BANG_.call(null, new cljs.core.Keyword(null, "#choose-patient", "#choose-patient", 4161058724));
-  for(var a = cljs.core.seq.call(null, dommy.utils.__GT_Array.call(null, document.getElementsByClassName("hidden"))), b = null, c = 0, d = 0;;) {
-    if(d < c) {
-      var e = cljs.core._nth.call(null, b, d);
-      dommy.core.remove_class_BANG_.call(null, e, "hidden");
-      d += 1
-    }else {
-      if(a = cljs.core.seq.call(null, a)) {
-        b = a, cljs.core.chunked_seq_QMARK_.call(null, b) ? (a = cljs.core.chunk_first.call(null, b), d = cljs.core.chunk_rest.call(null, b), b = a, c = cljs.core.count.call(null, a), a = d) : (a = cljs.core.first.call(null, b), dommy.core.remove_class_BANG_.call(null, a, "hidden"), a = cljs.core.next.call(null, b), b = null, c = 0), d = 0
-      }else {
-        break
-      }
-    }
-  }
-  return dommy.core.set_style_BANG_.call(null, document.getElementById("svg"), new cljs.core.Keyword(null, "display", "display", 2685668404), "block")
+  dommy.core.remove_class_BANG_.call(null, document.getElementById("svg-wrapper"), "hidden");
+  dommy.core.remove_class_BANG_.call(null, document.getElementById("outcome-summary-wrapper"), "hidden");
+  return dommy.core.remove_class_BANG_.call(null, document.getElementById("text-view"), "hidden")
 };
 trialist.tmain.text = function() {
   return dommy.core.set_text_BANG_.call(null, document.getElementById("text-view"), [cljs.core.str("ANALGESIA\n\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\n**Scored 0-10 (lower scores denote better outcomes)**\n\n*Treatment* ---------------------------------------- *A*  *B*\n\nAverage pain intensity (P):------------------------- "), 
