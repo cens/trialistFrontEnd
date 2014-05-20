@@ -1,3 +1,14 @@
+body{
+  position:absolute;
+  left:-25px;
+  right:0;
+  top:-25px;
+}
+
+#svg-wrapper{
+  height:1900px !important;
+}
+
 #alertModal{
   display:none;
 }
@@ -17,7 +28,7 @@
 }
 
 #text-view{
-  page-break-before: always; 
- margin-left: 150px;
+  page-break-before: always;
+  margin-left:100px;
 }
 
