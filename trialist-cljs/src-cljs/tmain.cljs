@@ -482,7 +482,7 @@ SIDE EFFECTS
 **Scored 0-10 (lower scores denote better outcomes)**
 
 *Treatment* ---------------------------------------- *A*  *B*
-Thinking problems: --------------------------------- 3/10 3/10
+Thinking problems: --------------------------------- " (rnd-ave (keyword (get @metadata :cognitiveFunctionPromptKey)) "A") "/10 " (rnd-ave (keyword (get @metadata :cognitiveFunctionPromptKey)) "B") "/10
 
 Constipation: -------------------------------------- " (rnd-ave :constipationPrompt "A") "/10 " (rnd-ave :constipationPrompt "B") "/10
 
