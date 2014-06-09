@@ -596,7 +596,10 @@
 					// The list of checkboxes for each regimen.
 					var CHECKBOX_REGIMEN_A = [];
 					var CHECKBOX_REGIMEN_B = [];
-					
+
+					// Treatments which trigger an opioid advisory popup
+					var OPIOID_TREATMENTS = [ "3", "4", "5", "6" ];
+
 					// Global array for the user list
                     var usernames = new Array();
 					
@@ -1840,6 +1843,34 @@
 											+ e);
 						}
 					}
+
+                    /**
+                     * Display an alert box if certain Regimen treatments are picked
+                     * (list of treatments that trigger the advisory is stored in OPIOID_TREATMENTS)
+                     */
+                    $('body').on('change', '#'+PROMPT_ID_REGIMEN_A+' input, #'+PROMPT_ID_REGIMEN_B+' input',
+                        function(e){
+                            var treatment_id = $(this).val();
+
+                            //only show the advisory popup if the input is checked
+                            if(!$(this).is(':checked')) {
+
+                                return ;
+                            }
+
+                            if(OPIOID_TREATMENTS.indexOf(treatment_id) >= 0) {
+                                alertUser("ADVISORY",
+                                        "You have selected an <b>opioid</b> or <b>tramadol</b> as part of your patient’s treatment "+
+                                        "regimen.  As a reminder, good clinical practice is to increase opioids <i>gradually</i> "+
+                                        "over the first few days. Decreases in both opioids and tramadol should also be "+
+                                        "done gradually over a few days to prevent withdrawal symptoms. Because of "+
+                                        "this, most n-of-1 trials involving opioids or tramadol should use <b>2-week "+
+                                        "treatment periods</b> (not 1-week periods).  Patients should be advised that if they "+
+                                        "become drowsy, they should stop the medication and seek your advice.",
+                                true);
+                            }
+                        }
+                    );
 				</script>
   </body>
 </html>
