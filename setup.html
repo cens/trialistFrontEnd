@@ -491,27 +491,7 @@
 							return -1;
 						};
 					}
-					// Extend the Array prototype to contain an equivalency function.
-					if (!Array.prototype.equivalent) {
-						Array.prototype.equivalent = function(other) {
-							if (typeof other === "undefined") {
-								return false;
-							}
-							if (other === null) {
-								return false;
-							}
-							if (this.length !== other.length) {
-								return false;
-							}
-							for ( var i = 0; i < this.length; i++) {
-								if (other.indexOf(this[i]) === -1) {
-									return false;
-								}
-							}
-							return true;
-						};
-					}
-					
+
 					 $(document).ready(function () {
 		                $("span").tooltip({
 		                  'selector': '',
@@ -1483,13 +1463,6 @@
 								index = index + 1;
 							}
 
-							// Make sure the two regimens are not equal.
-							if (regimenAs.equivalent(regimenBs)) {
-								alertUser("Equivalent Regimens",
-										"The first and second regimen lists are the same.");
-								return;
-							}
-							
 	                        // Make sure yes or no was selected 
                             var isPrescribingAdditionalOrContinuingTreatments = 0;
                              
