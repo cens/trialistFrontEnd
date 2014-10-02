@@ -1565,49 +1565,18 @@
 							}
 							
 							// Generate the random regimen plan as a text string in case people want it in the future
-							
+
 							var randomsArray = [];
+							var regimenPlan = [ "AB", "BA"];
 							for(var i = 0; i < randoms.length; i++) {
-								if(randoms[i] == 0) {
-									randomsArray.push('AB');	
-								} else {
-									randomsArray.push('BA');
-								}
+								randomsArray.push(regimenPlan[ Math.min(Math.max(0,randoms[i]),regimenPlan.length-1)]);
 							}
-							
-							var randomsAsText = randomsArray.toString();
-							
-							// Pad with zeros to make the binary math work
-							
-							if(randoms.length < 3) {
-								for(var i = 0; i < (3 - randoms.length ); i++) {
-									randoms.push(0);
-								}
-							}
-							
+
 							// 0 == AB
 							// 1 == BA
+							var randomsAsText = randomsArray.toString();          // human readable representation of regimen sequence
+							var random = parseInt(randoms.reverse().join(""),2);  // binary representation of regimen sequence
 							
-							var random = 0;
-							
-							for(var i = 0; i < randoms.length; i++) {
-							     if(i == 0) {
-							    	 if(randoms[i] == 1) {
-							    		 random = random + 1;
-							    	 }
-							     }
-							     if(i == 1) {
-                                     if(randoms[i] == 1) {
-                                         random = random + 2;
-                                     }
-                                 }
-							     if(i == 2) {
-                                     if(randoms[i] == 1) {
-                                         random = random + 4;
-                                     }
-                                 }
-							}
-														
 							// Get the primary outcome text.
 							var cognitiveFunction = $("#cognitiveFunction").val();
 							
