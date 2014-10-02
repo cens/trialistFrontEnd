@@ -1563,19 +1563,26 @@
 							for(var i = 0; i < actualRegimenCycles; i++) {
 								randoms.push(Math.floor(Math.random() * 1000 * MAX_RANDOM) % MAX_RANDOM);
 							}
-							
-							// Generate the random regimen plan as a text string in case people want it in the future
 
-							var randomsArray = [];
-							var regimenPlan = [ "AB", "BA"];
-							for(var i = 0; i < randoms.length; i++) {
-								randomsArray.push(regimenPlan[ Math.min(Math.max(0,randoms[i]),regimenPlan.length-1)]);
+							var humanReadableSchedule = function(schedule,text){
+								var result = [];
+								for (var i=0; i<schedule.length; i++){
+									result.push(text[ Math.min(Math.max(0,schedule[i]),text.length-1)]);
+								}
+
+								return result.toString();
 							}
+
+							var binarySchedule = function(schedule){
+								schedule.reverse();
+								return parseInt(schedule.join(""),2);
+							};
 
 							// 0 == AB
 							// 1 == BA
-							var randomsAsText = randomsArray.toString();          // human readable representation of regimen sequence
-							var random = parseInt(randoms.reverse().join(""),2);  // binary representation of regimen sequence
+							var regimenPlan = [ "AB", "BA"];
+							var randomsAsText = humanReadableSchedule(randoms,regimenPlan);  // human readable representation of regimen sequence
+							var random = binarySchedule(randoms);                            // binary representation of regimen sequence
 							
 							// Get the primary outcome text.
 							var cognitiveFunction = $("#cognitiveFunction").val();
