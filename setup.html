@@ -1575,7 +1575,7 @@
 							// 0 == AB
 							// 1 == BA
 							var randomsAsText = randomsArray.toString();          // human readable representation of regimen sequence
-							var random = parseInt(randoms.reverse().join(""),2);  // binary representation of regimen sequence
+							var random = parseInt(randoms.slice(0).reverse().join(""),2);  // binary representation of regimen sequence
 							
 							// Get the primary outcome text.
 							var cognitiveFunction = $("#cognitiveFunction").val();
