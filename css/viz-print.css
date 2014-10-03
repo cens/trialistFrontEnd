@@ -1,0 +1,34 @@
+body{
+  position:absolute;
+  left:-25px;
+  right:0;
+  top:-25px;
+}
+
+#svg-wrapper{
+  height:1900px !important;
+}
+
+#alertModal{
+  display:none;
+}
+
+.print-hide{
+  display:none;
+}
+
+#outcome-summary-button{
+  display:none;
+}
+
+*{
+ border:none !important;
+ -webkit-box-shadow:none;
+ box-shadow:none;
+}
+
+#text-view{
+  page-break-before: always;
+  margin-left:100px;
+}
+

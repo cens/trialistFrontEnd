@@ -1,0 +1,28 @@
+#choose-patient{
+margin:20px;
+}
+
+.well{
+  padding:0;
+}
+
+#app{
+}
+
+#outcome-summary-wrapper{
+ text-align:center;
+ padding:20px;
+ width:725px;
+ background:#fff;
+}
+
+#app pre{
+  padding-left:150px;
+  font-family:monospace;
+  border:none;
+  padding:50px;
+  width:667px;
+  height:1000px;
+  display:block;
+  background:#fff;
+}

@@ -1,0 +1,8 @@
+#scp ~/Projects/trialist-front-end/trialist-cljs/resources/public/js/main.js trialist.omh.io:/var/www/trialist-viz-test/js/visualization.js
+
+scp ~/Projects/trialist-front-end/results.html trialist.omh.io:/var/www/trialist-viz-test/results.html
+
+#scp ~/Projects/trialist-front-end/css/viz-print.css trialist.omh.io:/var/www/trialist-viz-test/css/viz-print.css
+
+#scp ~/Projects/trialist-front-end/trialist-cljs/resources/public/svg/page1.svg trialist.omh.io:/var/www/trialist-viz-test/page1.svg
+echo "copied js file"

@@ -363,6 +363,9 @@
 							<label class="control-label"><span class="dotted_underline" title="The number of weeks to be spent on each Regimen. At the end of the period, a switch to the next Regimen occurs.">Period Length:</span></label>
 							<div class="controls">
 								<select id="regimenDuration">
+<!-- mock only option -->           <option value="0" data-value="2">2 days</option>
+								    <option value="1" data-value="7">7 days</option>
+                                    <option value="2" data-value="14">14 days</option>
 								</select>
 							</div>
 						</div>
@@ -489,27 +492,7 @@
 							return -1;
 						};
 					}
-					// Extend the Array prototype to contain an equivalency function.
-					if (!Array.prototype.equivalent) {
-						Array.prototype.equivalent = function(other) {
-							if (typeof other === "undefined") {
-								return false;
-							}
-							if (other === null) {
-								return false;
-							}
-							if (this.length !== other.length) {
-								return false;
-							}
-							for ( var i = 0; i < this.length; i++) {
-								if (other.indexOf(this[i]) === -1) {
-									return false;
-								}
-							}
-							return true;
-						};
-					}
-					
+
 					 $(document).ready(function () {
 		                $("span").tooltip({
 		                  'selector': '',
@@ -594,7 +577,10 @@
 					// The list of checkboxes for each regimen.
 					var CHECKBOX_REGIMEN_A = [];
 					var CHECKBOX_REGIMEN_B = [];
-					
+
+					// Treatments which trigger an opioid advisory popup
+					var OPIOID_TREATMENTS = [ "3", "4", "5", "6" ];
+
 					// Global array for the user list
                     var usernames = new Array();
 					
@@ -738,7 +724,7 @@
 						return (window.DOMParser === undefined) 
 						  || (navigator.userAgent.indexOf("MSIE 9") != -1)
 						  || (navigator.userAgent.indexOf("MSIE 10") != -1)
-						  || (navigator.userAgent.indexOf("Trident/7.0") != -1); // huge hack for IE 11
+					      || (navigator.userAgent.indexOf("Trident/7.0") != -1); // huge hack for IE 11;;
 					}
 					
 					
@@ -1068,15 +1054,24 @@
 										// Populate the regimen HTML select.
 										setupRegimenLists(xmlObject,
 												setupSurvey, regimenA, regimenB)
-
-										// Populate the duration.
-										createSelectOptionsFromPromptProperties(
-										    xmlObject, setupSurvey,
-										    PROMPT_ID_REGIMEN_DURATION,
-										    regimenDuration);
-									    
-										regimenDuration.prop('selectedIndex', -1);
 										
+									    // The regimen duration drop-down is now populated statically.
+									    // The campaign XML for urn:campaign:trialist contains three 
+									    // regimenDurations. For internal testing, we use all three.
+									    // For real trials, the 2 day option is omitted. The campaign
+									    // is shared between internal testing and real trials in order
+									    // to avoid having to have a "perform internal testing" checkbox
+									    // in the phone app.
+									    
+										// Populate the duration.
+										// createSelectOptionsFromPromptProperties(
+										//		xmlObject, setupSurvey,
+										//		PROMPT_ID_REGIMEN_DURATION,
+										//		regimenDuration);
+								        
+										// Force a selection by the user
+									    regimenDuration.prop('selectedIndex', -1);
+
 										// Populate the number of cycles.
 										createSelectOptionsFromPromptProperties(
 												xmlObject, setupSurvey,
@@ -1469,13 +1464,6 @@
 								index = index + 1;
 							}
 
-							// Make sure the two regimens are not equal.
-							if (regimenAs.equivalent(regimenBs)) {
-								alertUser("Equivalent Regimens",
-										"The first and second regimen lists are the same.");
-								return;
-							}
-							
 	                        // Make sure yes or no was selected 
                             var isPrescribingAdditionalOrContinuingTreatments = 0;
                              
@@ -1578,49 +1566,18 @@
 							}
 							
 							// Generate the random regimen plan as a text string in case people want it in the future
-							
+
 							var randomsArray = [];
+							var regimenPlan = [ "AB", "BA"];
 							for(var i = 0; i < randoms.length; i++) {
-								if(randoms[i] == 0) {
-									randomsArray.push('AB');	
-								} else {
-									randomsArray.push('BA');
-								}
+								randomsArray.push(regimenPlan[ Math.min(Math.max(0,randoms[i]),regimenPlan.length-1)]);
 							}
-							
-							var randomsAsText = randomsArray.toString();
-							
-							// Pad with zeros to make the binary math work
-							
-							if(randoms.length < 3) {
-								for(var i = 0; i < (3 - randoms.length ); i++) {
-									randoms.push(0);
-								}
-							}
-							
+
 							// 0 == AB
 							// 1 == BA
+							var randomsAsText = randomsArray.toString();          // human readable representation of regimen sequence
+							var random = parseInt(randoms.slice(0).reverse().join(""),2);  // binary representation of regimen sequence
 							
-							var random = 0;
-							
-							for(var i = 0; i < randoms.length; i++) {
-							     if(i == 0) {
-							    	 if(randoms[i] == 1) {
-							    		 random = random + 1;
-							    	 }
-							     }
-							     if(i == 1) {
-                                     if(randoms[i] == 1) {
-                                         random = random + 2;
-                                     }
-                                 }
-							     if(i == 2) {
-                                     if(randoms[i] == 1) {
-                                         random = random + 4;
-                                     }
-                                 }
-							}
-														
 							// Get the primary outcome text.
 							var cognitiveFunction = $("#cognitiveFunction").val();
 							
@@ -1829,6 +1786,34 @@
 											+ e);
 						}
 					}
+
+                    /**
+                     * Display an alert box if certain Regimen treatments are picked
+                     * (list of treatments that trigger the advisory is stored in OPIOID_TREATMENTS)
+                     */
+                    $('body').on('change', '#'+PROMPT_ID_REGIMEN_A+' input, #'+PROMPT_ID_REGIMEN_B+' input',
+                        function(e){
+                            var treatment_id = $(this).val();
+
+                            //only show the advisory popup if the input is checked
+                            if(!$(this).is(':checked')) {
+
+                                return ;
+                            }
+
+                            if(OPIOID_TREATMENTS.indexOf(treatment_id) >= 0) {
+                                alertUser("ADVISORY",
+                                        "You have selected an <b>opioid</b> or <b>tramadol</b> as part of your patient’s treatment "+
+                                        "regimen.  As a reminder, good clinical practice is to increase opioids <i>gradually</i> "+
+                                        "over the first few days. Decreases in both opioids and tramadol should also be "+
+                                        "done gradually over a few days to prevent withdrawal symptoms. Because of "+
+                                        "this, most n-of-1 trials involving opioids or tramadol should use <b>2-week "+
+                                        "treatment periods</b> (not 1-week periods).  Patients should be advised that if they "+
+                                        "become drowsy, they should stop the medication and seek your advice.",
+                                true);
+                            }
+                        }
+                    );
 				</script>
   </body>
 </html>
