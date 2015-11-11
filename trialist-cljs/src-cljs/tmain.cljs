@@ -339,8 +339,8 @@
         b (/ b 10)]
      (dom/set-attr! rect-a :height (* 270 a))
      (dom/set-attr! rect-b :height (* 270 b))
-     (if (< a b) (dom/set-style! rect-a :stroke "linegreen" :stroke-width 2)
-                 (dom/set-style! rect-b :stroke "linegreen" :stroke-width 2))))
+     (if (< a b) (dom/set-style! rect-a :stroke-width 2)
+                 (dom/set-style! rect-b :stroke-width 2))))
 
 (defn remove-neuro []
   (.log js/console "remove-neuro")
@@ -397,23 +397,37 @@
 (defn summary [cat]
   (let [summary-ac (sel1 (str "#" cat "-summary-ac"))
         summary-am (sel1 (str "#" cat "-summary-am"))
+        summary-as (sel1 (str "#" cat "-summary-as"))
+        summary-nd (sel1 (str "#" cat "-summary-nd"))
+        summary-bs (sel1 (str "#" cat "-summary-bs"))
         summary-bm (sel1 (str "#" cat "-summary-bm"))
         summary-bc (sel1 (str "#" cat "-summary-bc"))
         scores (get-in @results [:data 0 :data (keyword cat) :graph_6])
         wid 494
-        ac (get-in scores [:a_clinically_better 0])
-        ac (* (js/parseFloat ac) wid)
-        am (get-in scores [:a_marginally_better 0])
-        am (* (js/parseFloat am) wid)
-        bm (get-in scores [:b_marginally_better 0])
-        bm (* (js/parseFloat bm) wid)
-        bc (get-in scores [:b_clinically_better 0])
-        bc (* (js/parseFloat bc) wid)]
-    (when summary-ac
-     (dom/set-attr! summary-ac :width ac)
-     (dom/set-attr! summary-am :x ac :width am)
-     (dom/set-attr! summary-bm :x (+ ac am) :width bm)
-     (dom/set-attr! summary-bc :x (+ ac am bm) :width bc))))
+        abl (get-in scores [:a_better_large 0])
+        abl (* (js/parseFloat abl) wid)
+        abm (get-in scores [:a_better_modest 0])
+        abm (* (js/parseFloat abm) wid)
+        abs (get-in scores [:a_better_small 0])
+        abs (* (js/parseFloat abs) wid)
+        nnn (get-in scores [:indistinguishable 0])
+        nnn (* (js/parseFloat nnn) wid)
+        bbs (get-in scores [:b_better_small 0])
+        bbs (* (js/parseFloat bbs) wid)
+        bbm (get-in scores [:b_better_modest 0])
+        bbm (* (js/parseFloat bbm) wid)
+        bbl (get-in scores [:b_better_large 0])
+        bbl (* (js/parseFloat bbl) wid)]
+    (if summary-as
+        (when summary-ac
+         (dom/set-attr! summary-ac :width abl)
+         (dom/set-attr! summary-am :x abl :width abm)
+         (dom/set-attr! summary-as :x (+ abl abm) :width abs)
+         (dom/set-attr! summary-nd :x (+ abl abm abs) :width nnn)
+         (dom/set-attr! summary-bs :x (+ abl abm abs nnn) :width bbs)
+         (dom/set-attr! summary-bm :x (+ abl abm abs nnn bbs) :width bbm)
+         (dom/set-attr! summary-bc :x (+ abl abm abs nnn bbs bbm) :width bbl)))
+  ))
 
 (defn graph-6 []
       (summary "pain")

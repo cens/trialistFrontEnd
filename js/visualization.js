@@ -3424,16 +3424,16 @@ cljs.core.fn_QMARK_ = function(a) {
 };
 cljs.core.with_meta = function with_meta(b, c) {
   return cljs.core.fn_QMARK_.call(null, b) && !(b ? b.cljs$lang$protocol_mask$partition0$ & 262144 || b.cljs$core$IWithMeta$ || (b.cljs$lang$protocol_mask$partition0$ ? 0 : cljs.core.native_satisfies_QMARK_.call(null, cljs.core.IWithMeta, b)) : cljs.core.native_satisfies_QMARK_.call(null, cljs.core.IWithMeta, b)) ? with_meta.call(null, function() {
-    "undefined" === typeof cljs.core.t6554 && (cljs.core.t6554 = function(b, c, f, g) {
+    "undefined" === typeof cljs.core.t6525 && (cljs.core.t6525 = function(b, c, f, g) {
       this.meta = b;
       this.o = c;
       this.with_meta = f;
-      this.meta6555 = g;
+      this.meta6526 = g;
       this.cljs$lang$protocol_mask$partition1$ = 0;
       this.cljs$lang$protocol_mask$partition0$ = 393217
-    }, cljs.core.t6554.cljs$lang$type = !0, cljs.core.t6554.cljs$lang$ctorStr = "cljs.core/t6554", cljs.core.t6554.cljs$lang$ctorPrWriter = function(b, c, f) {
-      return cljs.core._write.call(null, c, "cljs.core/t6554")
-    }, cljs.core.t6554.prototype.call = function() {
+    }, cljs.core.t6525.cljs$lang$type = !0, cljs.core.t6525.cljs$lang$ctorStr = "cljs.core/t6525", cljs.core.t6525.cljs$lang$ctorPrWriter = function(b, c, f) {
+      return cljs.core._write.call(null, c, "cljs.core/t6525")
+    }, cljs.core.t6525.prototype.call = function() {
       var b = function(b, c) {
         return cljs.core.apply.call(null, b.o, c)
       }, c = function(c, e) {
@@ -3450,9 +3450,9 @@ cljs.core.with_meta = function with_meta(b, c) {
       };
       c.cljs$core$IFn$_invoke$arity$variadic = b;
       return c
-    }(), cljs.core.t6554.prototype.apply = function(b, c) {
+    }(), cljs.core.t6525.prototype.apply = function(b, c) {
       return this.call.apply(this, [this].concat(c.slice()))
-    }, cljs.core.t6554.prototype.cljs$core$IFn$_invoke$arity$2 = function() {
+    }, cljs.core.t6525.prototype.cljs$core$IFn$_invoke$arity$2 = function() {
       var b = function(b) {
         return cljs.core.apply.call(null, self__.o, b)
       }, c = function(c) {
@@ -3467,14 +3467,14 @@ cljs.core.with_meta = function with_meta(b, c) {
       };
       c.cljs$core$IFn$_invoke$arity$variadic = b;
       return c
-    }(), cljs.core.t6554.prototype.cljs$core$Fn$ = !0, cljs.core.t6554.prototype.cljs$core$IMeta$_meta$arity$1 = function(b) {
-      return this.meta6555
-    }, cljs.core.t6554.prototype.cljs$core$IWithMeta$_with_meta$arity$2 = function(b, c) {
-      return new cljs.core.t6554(this.meta, this.o, this.with_meta, c)
-    }, cljs.core.__GT_t6554 = function(b, c, f, g) {
-      return new cljs.core.t6554(b, c, f, g)
+    }(), cljs.core.t6525.prototype.cljs$core$Fn$ = !0, cljs.core.t6525.prototype.cljs$core$IMeta$_meta$arity$1 = function(b) {
+      return this.meta6526
+    }, cljs.core.t6525.prototype.cljs$core$IWithMeta$_with_meta$arity$2 = function(b, c) {
+      return new cljs.core.t6525(this.meta, this.o, this.with_meta, c)
+    }, cljs.core.__GT_t6525 = function(b, c, f, g) {
+      return new cljs.core.t6525(b, c, f, g)
     });
-    return new cljs.core.t6554(c, b, with_meta, null)
+    return new cljs.core.t6525(c, b, with_meta, null)
   }(), c) : cljs.core._with_meta.call(null, b, c)
 };
 cljs.core.meta = function(a) {
@@ -18674,13 +18674,13 @@ try {
   Window.prototype.dommy$template$PElement$ = !0, Window.prototype.dommy$template$PElement$_elem$arity$1 = function(a) {
     return this
   }
-}catch(e7922) {
-  if(e7922 instanceof ReferenceError) {
-    var __7923 = e7922;
+}catch(e7893) {
+  if(e7893 instanceof ReferenceError) {
+    var __7894 = e7893;
     console.log("PElement: js/Window not defined by browser, skipping it... (running on phantomjs?)")
   }else {
     if(new cljs.core.Keyword(null, "else", "else", 1017020587)) {
-      throw e7922;
+      throw e7893;
     }
   }
 }
@@ -18909,30 +18909,30 @@ dommy.core.selector_map = function selector_map(b, c) {
   return cljs.core.merge.call(null, cljs.core.PersistentArrayMap.fromArray([new cljs.core.Keyword(null, "container", "container", 602947571), d], !0), cljs.core.into.call(null, cljs.core.PersistentArrayMap.EMPTY, cljs.core.map.call(null, function(e) {
     var f = cljs.core.nth.call(null, e, 0, null), g = cljs.core.nth.call(null, e, 1, null);
     return cljs.core.PersistentVector.fromArray([f, cljs.core.truth_((new cljs.core.Keyword(null, "live", "live", 1017226334)).cljs$core$IFn$_invoke$arity$1(cljs.core.meta.call(null, g))) ? function() {
-      "undefined" === typeof dommy.core.t7453 && (dommy.core.t7453 = function(b, c, d, e, f, g, q, r, s) {
+      "undefined" === typeof dommy.core.t7424 && (dommy.core.t7424 = function(b, c, d, e, f, g, q, r, s) {
         this.v = b;
         this.k = c;
-        this.vec__7452 = d;
-        this.p__7451 = e;
+        this.vec__7423 = d;
+        this.p__7422 = e;
         this.container = f;
         this.key_selectors_map = g;
         this.template = q;
         this.selector_map = r;
-        this.meta7454 = s;
+        this.meta7425 = s;
         this.cljs$lang$protocol_mask$partition1$ = 0;
         this.cljs$lang$protocol_mask$partition0$ = 425984
-      }, dommy.core.t7453.cljs$lang$type = !0, dommy.core.t7453.cljs$lang$ctorStr = "dommy.core/t7453", dommy.core.t7453.cljs$lang$ctorPrWriter = function(b, c, d) {
-        return cljs.core._write.call(null, c, "dommy.core/t7453")
-      }, dommy.core.t7453.prototype.cljs$core$IDeref$_deref$arity$1 = function(b) {
+      }, dommy.core.t7424.cljs$lang$type = !0, dommy.core.t7424.cljs$lang$ctorStr = "dommy.core/t7424", dommy.core.t7424.cljs$lang$ctorPrWriter = function(b, c, d) {
+        return cljs.core._write.call(null, c, "dommy.core/t7424")
+      }, dommy.core.t7424.prototype.cljs$core$IDeref$_deref$arity$1 = function(b) {
         return dommy.utils.__GT_Array.call(null, dommy.template.__GT_node_like.call(null, this.container).querySelectorAll(dommy.core.selector.call(null, this.v)))
-      }, dommy.core.t7453.prototype.cljs$core$IMeta$_meta$arity$1 = function(b) {
-        return this.meta7454
-      }, dommy.core.t7453.prototype.cljs$core$IWithMeta$_with_meta$arity$2 = function(b, c) {
-        return new dommy.core.t7453(this.v, this.k, this.vec__7452, this.p__7451, this.container, this.key_selectors_map, this.template, this.selector_map, c)
-      }, dommy.core.__GT_t7453 = function(b, c, d, e, f, g, q, r, s) {
-        return new dommy.core.t7453(b, c, d, e, f, g, q, r, s)
+      }, dommy.core.t7424.prototype.cljs$core$IMeta$_meta$arity$1 = function(b) {
+        return this.meta7425
+      }, dommy.core.t7424.prototype.cljs$core$IWithMeta$_with_meta$arity$2 = function(b, c) {
+        return new dommy.core.t7424(this.v, this.k, this.vec__7423, this.p__7422, this.container, this.key_selectors_map, this.template, this.selector_map, c)
+      }, dommy.core.__GT_t7424 = function(b, c, d, e, f, g, q, r, s) {
+        return new dommy.core.t7424(b, c, d, e, f, g, q, r, s)
       });
-      return new dommy.core.t7453(g, f, e, e, d, c, b, selector_map, null)
+      return new dommy.core.t7424(g, f, e, e, d, c, b, selector_map, null)
     }() : dommy.template.__GT_node_like.call(null, d).querySelector(dommy.core.selector.call(null, g))], !0)
   }, c)))
 };
@@ -19557,7 +19557,7 @@ trialist.tmain.bars = function(a, b) {
   var c = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-a")].join(""))), d = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-b")].join(""))), e = trialist.tmain.ave.call(null, b, "A") / 10, f = trialist.tmain.ave.call(null, b, "B") / 10;
   dommy.core.set_attr_BANG_.call(null, c, new cljs.core.Keyword(null, "height", "height", 4087841945), 270 * e);
   dommy.core.set_attr_BANG_.call(null, d, new cljs.core.Keyword(null, "height", "height", 4087841945), 270 * f);
-  return e < f ? dommy.core.set_style_BANG_.call(null, c, new cljs.core.Keyword(null, "stroke", "stroke", 4416891306), "linegreen", new cljs.core.Keyword(null, "stroke-width", "stroke-width", 3636011363), 2) : dommy.core.set_style_BANG_.call(null, d, new cljs.core.Keyword(null, "stroke", "stroke", 4416891306), "linegreen", new cljs.core.Keyword(null, "stroke-width", "stroke-width", 3636011363), 2)
+  return e < f ? dommy.core.set_style_BANG_.call(null, c, new cljs.core.Keyword(null, "stroke-width", "stroke-width", 3636011363), 2) : dommy.core.set_style_BANG_.call(null, d, new cljs.core.Keyword(null, "stroke-width", "stroke-width", 3636011363), 2)
 };
 trialist.tmain.remove_neuro = function() {
   console.log("remove-neuro");
@@ -19597,14 +19597,17 @@ trialist.tmain.graph_5 = function() {
   return trialist.tmain.confidence.call(null, "sleep_problems")
 };
 trialist.tmain.summary = function(a) {
-  var b = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-summary-ac")].join(""))), c = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-summary-am")].join(""))), d = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-summary-bm")].join(""))), e = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), 
-  cljs.core.str(a), cljs.core.str("-summary-bc")].join(""))), f = cljs.core.get_in.call(null, cljs.core.deref.call(null, trialist.tmain.results), cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "data", "data", 1016980252), 0, new cljs.core.Keyword(null, "data", "data", 1016980252), cljs.core.keyword.call(null, a), new cljs.core.Keyword(null, "graph_6", "graph_6", 1294247159)], !0));
-  a = cljs.core.get_in.call(null, f, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "a_clinically_better", "a_clinically_better", 2608355907), 0], !0));
+  var b = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-summary-ac")].join(""))), c = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-summary-am")].join(""))), d = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-summary-as")].join(""))), e = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), 
+  cljs.core.str(a), cljs.core.str("-summary-nd")].join(""))), f = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-summary-bs")].join(""))), g = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-summary-bm")].join(""))), h = document.querySelector(dommy.core.selector.call(null, [cljs.core.str("#"), cljs.core.str(a), cljs.core.str("-summary-bc")].join(""))), k = cljs.core.get_in.call(null, 
+  cljs.core.deref.call(null, trialist.tmain.results), cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "data", "data", 1016980252), 0, new cljs.core.Keyword(null, "data", "data", 1016980252), cljs.core.keyword.call(null, a), new cljs.core.Keyword(null, "graph_6", "graph_6", 1294247159)], !0));
+  a = cljs.core.get_in.call(null, k, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "a_better_large", "a_better_large", 4684405436), 0], !0));
   a = 494 * parseFloat(a);
-  var g = cljs.core.get_in.call(null, f, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "a_marginally_better", "a_marginally_better", 1629409725), 0], !0)), g = 494 * parseFloat(g), h = cljs.core.get_in.call(null, f, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "b_marginally_better", "b_marginally_better", 784937854), 0], !0)), h = 494 * parseFloat(h), f = cljs.core.get_in.call(null, f, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "b_clinically_better", 
-  "b_clinically_better", 1763884036), 0], !0)), f = 494 * parseFloat(f);
-  return cljs.core.truth_(b) ? (dommy.core.set_attr_BANG_.call(null, b, new cljs.core.Keyword(null, "width", "width", 1127031096), a), dommy.core.set_attr_BANG_.call(null, c, new cljs.core.Keyword(null, "x", "x", 1013904362), a, new cljs.core.Keyword(null, "width", "width", 1127031096), g), dommy.core.set_attr_BANG_.call(null, d, new cljs.core.Keyword(null, "x", "x", 1013904362), a + g, new cljs.core.Keyword(null, "width", "width", 1127031096), h), dommy.core.set_attr_BANG_.call(null, e, new cljs.core.Keyword(null, 
-  "x", "x", 1013904362), a + g + h, new cljs.core.Keyword(null, "width", "width", 1127031096), f)) : null
+  var l = cljs.core.get_in.call(null, k, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "a_better_modest", "a_better_modest", 3171431559), 0], !0)), l = 494 * parseFloat(l), m = cljs.core.get_in.call(null, k, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "a_better_small", "a_better_small", 4691211400), 0], !0)), m = 494 * parseFloat(m), n = cljs.core.get_in.call(null, k, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "indistinguishable", "indistinguishable", 
+  1160854764), 0], !0)), n = 494 * parseFloat(n), p = cljs.core.get_in.call(null, k, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "b_better_small", "b_better_small", 4185652775), 0], !0)), p = 494 * parseFloat(p), q = cljs.core.get_in.call(null, k, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, "b_better_modest", "b_better_modest", 4678983368), 0], !0)), q = 494 * parseFloat(q), k = cljs.core.get_in.call(null, k, cljs.core.PersistentVector.fromArray([new cljs.core.Keyword(null, 
+  "b_better_large", "b_better_large", 4178846811), 0], !0)), k = 494 * parseFloat(k);
+  return cljs.core.truth_(d) && cljs.core.truth_(b) ? (dommy.core.set_attr_BANG_.call(null, b, new cljs.core.Keyword(null, "width", "width", 1127031096), a), dommy.core.set_attr_BANG_.call(null, c, new cljs.core.Keyword(null, "x", "x", 1013904362), a, new cljs.core.Keyword(null, "width", "width", 1127031096), l), dommy.core.set_attr_BANG_.call(null, d, new cljs.core.Keyword(null, "x", "x", 1013904362), a + l, new cljs.core.Keyword(null, "width", "width", 1127031096), m), dommy.core.set_attr_BANG_.call(null, 
+  e, new cljs.core.Keyword(null, "x", "x", 1013904362), a + l + m, new cljs.core.Keyword(null, "width", "width", 1127031096), n), dommy.core.set_attr_BANG_.call(null, f, new cljs.core.Keyword(null, "x", "x", 1013904362), a + l + m + n, new cljs.core.Keyword(null, "width", "width", 1127031096), p), dommy.core.set_attr_BANG_.call(null, g, new cljs.core.Keyword(null, "x", "x", 1013904362), a + l + m + n + p, new cljs.core.Keyword(null, "width", "width", 1127031096), q), dommy.core.set_attr_BANG_.call(null, 
+  h, new cljs.core.Keyword(null, "x", "x", 1013904362), a + l + m + n + p + q, new cljs.core.Keyword(null, "width", "width", 1127031096), k)) : null
 };
 trialist.tmain.graph_6 = function() {
   trialist.tmain.summary.call(null, "pain");
@@ -19646,10 +19649,11 @@ trialist.tmain.text = function() {
   cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "averagePainIntensity", "averagePainIntensity", 4636639826), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "averagePainIntensity", "averagePainIntensity", 4636639826), "B")), cljs.core.str("/10"), cljs.core.str(cljs.core.truth_(cljs.core.get_in.call(null, cljs.core.deref.call(null, trialist.tmain.data), cljs.core.PersistentVector.fromArray([0, new cljs.core.Keyword(null, 
   "painHotness", "painHotness", 4427389920)], !0))) ? [cljs.core.str("\nNeuropathic pain descriptors:\n\n  Sharp: ------------------------------------------- "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "painSharpness", "painSharpness", 2738509437), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "painSharpness", "painSharpness", 2738509437), "B")), cljs.core.str("/10\n\n  Hot: --------------------------------------------- "), 
   cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "painHotness", "painHotness", 4427389920), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "painHotness", "painHotness", 4427389920), "B")), cljs.core.str("/10\n\n  Sensitive to touch: ------------------------------ "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "painSensitivity", "painSensitivity", 3365360987), "A")), cljs.core.str("/10 "), 
-  cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "painSensitivity", "painSensitivity", 3365360987), "B")), cljs.core.str("/10")].join("") : ""), cljs.core.str("\n_________________________________________________________________\n\nSIDE EFFECTS\n\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\n**Scored 0-10 (lower scores denote better outcomes)**\n\n*Treatment* ---------------------------------------- *A*  *B*\nThinking problems: --------------------------------- 3/10 3/10\n\nConstipation: -------------------------------------- "), 
-  cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "constipationPrompt", "constipationPrompt", 1329778209), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "constipationPrompt", "constipationPrompt", 1329778209), "B")), cljs.core.str("/10\n\nFatigue: ------------------------------------------- "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "fatiguePrompt", "fatiguePrompt", 1744398973), 
-  "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "fatiguePrompt", "fatiguePrompt", 1744398973), "B")), cljs.core.str("/10\n\nDrowsiness: ---------------------------------------- "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "drowsinessPrompt", "drowsinessPrompt", 619474649), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "drowsinessPrompt", "drowsinessPrompt", 
-  619474649), "B")), cljs.core.str("/10\n\n_________________________________________________________________\n\nINTERFERENCE WITH ACTIVITIES OF DAILY LIVING\n\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\n**Scored 0-10 (lower scores denote better outcomes)**\n\n*Treatment* ---------------------------------------- *A*  *B*\n\nSleeping: ------------------------------------------ "), 
+  cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "painSensitivity", "painSensitivity", 3365360987), "B")), cljs.core.str("/10")].join("") : ""), cljs.core.str("\n_________________________________________________________________\n\nSIDE EFFECTS\n\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\n**Scored 0-10 (lower scores denote better outcomes)**\n\n*Treatment* ---------------------------------------- *A*  *B*\nThinking problems: --------------------------------- "), 
+  cljs.core.str(trialist.tmain.rnd_ave.call(null, cljs.core.keyword.call(null, cljs.core.get.call(null, cljs.core.deref.call(null, trialist.tmain.metadata), new cljs.core.Keyword(null, "cognitiveFunctionPromptKey", "cognitiveFunctionPromptKey", 3975622299))), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, cljs.core.keyword.call(null, cljs.core.get.call(null, cljs.core.deref.call(null, trialist.tmain.metadata), new cljs.core.Keyword(null, "cognitiveFunctionPromptKey", 
+  "cognitiveFunctionPromptKey", 3975622299))), "B")), cljs.core.str("/10\n\nConstipation: -------------------------------------- "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "constipationPrompt", "constipationPrompt", 1329778209), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "constipationPrompt", "constipationPrompt", 1329778209), "B")), cljs.core.str("/10\n\nFatigue: ------------------------------------------- "), 
+  cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "fatiguePrompt", "fatiguePrompt", 1744398973), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "fatiguePrompt", "fatiguePrompt", 1744398973), "B")), cljs.core.str("/10\n\nDrowsiness: ---------------------------------------- "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "drowsinessPrompt", "drowsinessPrompt", 619474649), "A")), cljs.core.str("/10 "), 
+  cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "drowsinessPrompt", "drowsinessPrompt", 619474649), "B")), cljs.core.str("/10\n\n_________________________________________________________________\n\nINTERFERENCE WITH ACTIVITIES OF DAILY LIVING\n\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\n**Scored 0-10 (lower scores denote better outcomes)**\n\n*Treatment* ---------------------------------------- *A*  *B*\n\nSleeping: ------------------------------------------ "), 
   cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "sleepDisturbancePrompt", "sleepDisturbancePrompt", 2006915117), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "sleepDisturbancePrompt", "sleepDisturbancePrompt", 2006915117), "B")), cljs.core.str("/10\n\nInterference with enjoyment of life (E): ----------- "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "enjoymentOfLife", "enjoymentOfLife", 
   3751138478), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "enjoymentOfLife", "enjoymentOfLife", 3751138478), "B")), cljs.core.str("/10\n\nInterference with general activity (G): ------------ "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "generalActivity", "generalActivity", 4585089929), "A")), cljs.core.str("/10 "), cljs.core.str(trialist.tmain.rnd_ave.call(null, new cljs.core.Keyword(null, "generalActivity", 
   "generalActivity", 4585089929), "B")), cljs.core.str("/10\n_________________________________________________________________\n\n*SERIAL PEG SCORES \u2013 PEG is a 3-item Scale that assesses average\n pain intensity (P), interference with enjoyment of life (E),\n and interference with general activity (G). Lower scores denote\n better outcomes.*")].join(""))

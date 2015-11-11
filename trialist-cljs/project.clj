@@ -18,11 +18,12 @@
   :profiles {:dev {:dependencies [[ring-mock "0.1.5"]]}}
   :cljsbuild {
     :builds [{
-        :notify-command ["/Users/maku/Projects/trialist-front-end/trialist-cljs/sync"]
+        :notify-command ["./sync"]
         ; ClojureScript source directory:
         :source-paths ["src-cljs"]
         ; The standard ClojureScript compiler options:
         ; (See the ClojureScript compiler documentation for details.)
+        ; compile from console ... 'lein cljsbuild once'
         :compiler {
           :externs ["resources/externs.js"]
           :output-to "resources/public/js/main.js"  ; default: target/cljsbuild-main.js
