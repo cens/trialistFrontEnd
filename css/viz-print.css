@@ -29,6 +29,7 @@ body{
 
 #text-view{
   page-break-before: always;
+  margin-top: 6em;
   margin-left:100px;
 }
 
